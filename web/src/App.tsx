@@ -7,7 +7,6 @@ import { SyncHealth } from "@/widgets/SyncHealth";
 import { Tasks } from "@/widgets/Tasks";
 import { AutoResearchTrend } from "@/widgets/AutoResearchTrend";
 import { AutoResearchLog } from "@/widgets/AutoResearchLog";
-import { TerminalMascot } from "@/components/ui/terminal-mascot";
 
 type LastSync = {
   job_name: string;
@@ -34,7 +33,6 @@ function formatTimeKst(iso: string): string {
 }
 
 function formatDateKst(iso: string): string {
-  // returns "08/05/2026" — convert to "2026-05-08"
   const parts = DATE_FORMAT.formatToParts(new Date(iso));
   const day = parts.find((p) => p.type === "day")?.value ?? "";
   const month = parts.find((p) => p.type === "month")?.value ?? "";
@@ -64,24 +62,24 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground dark">
+    <div className="min-h-screen bg-background text-foreground">
       <Header lastSync={lastSync} error={error} />
-      <main className="mx-auto max-w-[1400px] px-6 pb-12 pt-6">
-        {/* Row 1: KPI tiles */}
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <PlaceholderTile title="TMS · ACTIVE" code="B" />
+      <main className="mx-auto max-w-[1280px] px-6 pb-16 pt-8 sm:px-8 lg:px-12">
+        {/* Row 1: KPI + Status tiles */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <PlaceholderTile title="TMS · Active" code="B" />
           <Tasks />
           <SyncHealth />
         </div>
 
         {/* Row 2: Trend chart */}
-        <div className="mt-3">
+        <div className="mt-4">
           <AutoResearchTrend />
         </div>
 
         {/* Row 3: Activity + Log */}
-        <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
-          <PlaceholderTile title="AGENT ACTIVITY · LIVE" code="E" />
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <PlaceholderTile title="Agent Activity · Live" code="E" />
           <AutoResearchLog />
         </div>
 
@@ -99,69 +97,60 @@ function Header({
   error: string | null;
 }) {
   return (
-    <header className="border-b border-zinc-800 bg-black px-6 py-4">
-      <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <TerminalMascot className="text-sm" />
-          <h1 className="text-base font-semibold uppercase tracking-terminal text-orange-warm">
-            SINCERELY-SCM
-          </h1>
-          <span className="text-[11px] uppercase tracking-wide text-zinc-500">
-            · AGENTIC OS
+    <header className="border-b border-divider/70 bg-background">
+      <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-4 px-6 py-5 sm:px-8 lg:px-12">
+        <div className="flex items-baseline gap-3">
+          <span
+            aria-hidden
+            className="font-display text-3xl leading-none text-crail"
+          >
+            ❈
           </span>
+          <h1 className="font-display text-2xl font-medium tracking-tight text-ink">
+            Sincerely SCM
+          </h1>
+          <span className="text-sm text-smoke">Agentic OS</span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] uppercase tracking-wide text-zinc-500">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-smoke">
           {error ? (
             <span className="text-destructive">⚠ {error}</span>
           ) : lastSync ? (
-            <>
-              <span>
-                LAST SYNC ·{" "}
-                <span className="text-zinc-300 tabular-nums">
-                  {formatDateKst(lastSync.started_at)}{" "}
-                  {formatTimeKst(lastSync.started_at)}
-                </span>
+            <span className="inline-flex items-center gap-2">
+              <span>Last sync</span>
+              <span className="font-mono text-ink tnum">
+                {formatDateKst(lastSync.started_at)}{" "}
+                {formatTimeKst(lastSync.started_at)}
               </span>
-              <span className="text-zinc-700">·</span>
               <StatusGlyph
                 variant={lastSync.status === "ok" ? "ok" : "failed"}
-                label={lastSync.status.toUpperCase()}
+                label={lastSync.status === "ok" ? "OK" : "Failed"}
               />
-            </>
+            </span>
           ) : (
-            <span>LOADING</span>
+            <span>Loading…</span>
           )}
-          <span className="text-zinc-700">·</span>
-          <span>
-            VAULT · TMS · WMS · LOG
-          </span>
+          <span className="text-divider">·</span>
+          <nav className="flex items-center gap-3 text-xs">
+            <span className="hover:text-ink cursor-default">Vault</span>
+            <span className="hover:text-ink cursor-default">TMS</span>
+            <span className="hover:text-ink cursor-default">WMS</span>
+            <span className="hover:text-ink cursor-default">Log</span>
+          </nav>
         </div>
       </div>
     </header>
   );
 }
 
-function PlaceholderTile({
-  title,
-  code,
-  wide,
-}: {
-  title: string;
-  code: string;
-  wide?: boolean;
-}) {
+function PlaceholderTile({ title, code }: { title: string; code: string }) {
   return (
-    <Card className={wide ? "min-h-[200px]" : "min-h-[160px]"}>
-      <SectionHeader title={title} meta={`WIDGET · ${code}`} />
-      <div className="flex h-full items-center justify-center px-4 py-6">
-        <div className="text-center">
-          <div className="text-[10px] uppercase tracking-terminal text-zinc-700">
-            COMING NEXT
-          </div>
-          <div className="mt-1 font-mono text-xs text-zinc-600">
-            ┄┄┄┄┄┄┄┄┄┄
-          </div>
+    <Card className="min-h-[200px]">
+      <SectionHeader title={title} meta={`Widget ${code}`} />
+      <div className="flex h-full items-center justify-center px-6 py-10">
+        <div className="text-center text-sm text-smoke">
+          <div>Coming next</div>
+          <div className="mt-1 text-xs text-smoke/60">— — —</div>
         </div>
       </div>
     </Card>
@@ -170,11 +159,9 @@ function PlaceholderTile({
 
 function Footer() {
   return (
-    <div className="mt-8 border-t border-zinc-800 pt-3 text-[10px] uppercase tracking-wide text-zinc-700">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <span>SINCERELY-SCM · DASHBOARD · v1.5</span>
-        <span>SOLO MODE · DAILY REFRESH @ 00:00 KST</span>
-      </div>
+    <div className="mt-10 flex flex-wrap items-center justify-between gap-2 border-t border-divider/70 pt-4 text-xs text-smoke">
+      <span>Sincerely SCM · Dashboard · v1.6</span>
+      <span>Solo mode · daily refresh @ 00:00 KST</span>
     </div>
   );
 }

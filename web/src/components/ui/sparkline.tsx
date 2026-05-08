@@ -11,7 +11,7 @@ export function Sparkline({ data, height = 32, className }: Props) {
   if (!data?.length) {
     return (
       <div
-        className={cn("text-[10px] text-zinc-700", className)}
+        className={cn("text-xs text-smoke/60", className)}
         style={{ height }}
         aria-hidden
       >
@@ -30,8 +30,8 @@ export function Sparkline({ data, height = 32, className }: Props) {
           <Line
             type="monotone"
             dataKey="value"
-            stroke="hsl(var(--orange-warm))"
-            strokeWidth={1.5}
+            stroke="hsl(var(--accent))"
+            strokeWidth={1.75}
             dot={false}
             isAnimationActive={false}
           />

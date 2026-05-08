@@ -1,11 +1,10 @@
 import { cn } from "@/lib/utils";
 
 interface Props {
-  value: number;        // 0..100
-  total?: number;       // optional denominator label
-  current?: number;     // optional numerator label
-  label?: string;       // override label, e.g. "DONE"
-  segments?: number;    // total bar segments (default 20)
+  value: number; // 0..100
+  total?: number;
+  current?: number;
+  label?: string;
   className?: string;
 }
 
@@ -13,33 +12,29 @@ export function InlineProgress({
   value,
   total,
   current,
-  label = "DONE",
-  segments = 20,
+  label = "Done",
   className,
 }: Props) {
   const pct = Math.max(0, Math.min(100, value));
-  const filled = Math.round((pct / 100) * segments);
-  const empty = segments - filled;
   const fractionLabel =
     typeof total === "number" && typeof current === "number"
       ? ` (${current}/${total})`
       : "";
 
   return (
-    <div
-      className={cn(
-        "flex items-center gap-3 font-mono text-xs text-zinc-400",
-        className,
-      )}
-    >
-      <span aria-hidden className="tracking-tighter">
-        <span className="text-orange-warm">{"█".repeat(filled)}</span>
-        <span className="text-zinc-800">{"░".repeat(empty)}</span>
-      </span>
-      <span className="text-zinc-500">
-        {pct}% {label}
-        {fractionLabel}
-      </span>
+    <div className={cn("flex flex-col gap-1.5", className)}>
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-divider/60">
+        <div
+          className="h-full rounded-full bg-crail transition-[width] duration-300"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <div className="flex items-center justify-between text-xs text-smoke">
+        <span>
+          {pct}% {label}
+        </span>
+        <span className="tnum">{fractionLabel.trim().slice(1, -1)}</span>
+      </div>
     </div>
   );
 }

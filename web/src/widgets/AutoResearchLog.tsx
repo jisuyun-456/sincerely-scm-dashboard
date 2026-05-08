@@ -18,11 +18,14 @@ const DATE_FMT = new Intl.DateTimeFormat("en-CA", {
   day: "2-digit",
 });
 
-function tagColor(entryType: string): string {
-  if (entryType.startsWith("WEEKLY_TMS")) return "text-orange-warm";
-  if (entryType.startsWith("WEEKLY_WMS")) return "text-warning";
-  if (entryType.includes("INFRA")) return "text-zinc-400";
-  return "text-zinc-500";
+function tagPill(entryType: string): { label: string; cls: string } {
+  if (entryType.startsWith("WEEKLY_TMS"))
+    return { label: "TMS", cls: "bg-crail/10 text-crail" };
+  if (entryType.startsWith("WEEKLY_WMS"))
+    return { label: "WMS", cls: "bg-warning/15 text-warning" };
+  if (entryType.includes("INFRA"))
+    return { label: "INFRA", cls: "bg-divider/60 text-smoke" };
+  return { label: entryType.slice(0, 8), cls: "bg-divider/60 text-smoke" };
 }
 
 export function AutoResearchLog() {
@@ -38,74 +41,69 @@ export function AutoResearchLog() {
         .order("log_date", { ascending: false })
         .limit(8);
       if (cancelled) return;
-      if (error) {
-        setError(error.message);
-      } else {
-        setRows((data ?? []) as Row[]);
-      }
+      if (error) setError(error.message);
+      else setRows((data ?? []) as Row[]);
     })();
     return () => {
       cancelled = true;
     };
   }, []);
 
-  const meta = rows ? `${rows.length} ENTRIES` : "LOADING";
+  const meta = rows ? `${rows.length} entries` : "Loading";
 
   return (
-    <Card className="min-h-[200px]">
-      <SectionHeader title="AUTORESEARCH · LOG" meta={meta} />
-      <div className="divide-y divide-zinc-800 text-xs">
+    <Card>
+      <SectionHeader title="AutoResearch · Log" meta={meta} />
+      <ul className="divide-y divide-divider/40">
         {rows === null ? (
-          <div className="space-y-2 px-4 py-3">
+          <li className="space-y-3 px-6 py-4">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="flex items-center gap-3">
-                <Skeleton className="h-3 w-16" />
+                <Skeleton className="h-3 w-20" />
                 <Skeleton className="h-3 w-12" />
                 <Skeleton className="h-3 flex-1" />
               </div>
             ))}
-          </div>
+          </li>
         ) : error ? (
-          <div className="px-4 py-3 text-destructive">⚠ {error}</div>
+          <li className="px-6 py-4 text-sm text-destructive">⚠ {error}</li>
         ) : rows.length === 0 ? (
-          <div className="px-4 py-10 text-center font-mono text-[11px] uppercase tracking-wide text-zinc-600">
-            ○ NO LOG ENTRIES YET
-          </div>
+          <li className="px-6 py-12 text-center text-sm text-smoke">
+            No log entries yet.
+          </li>
         ) : (
           rows.map((r) => {
-            const tag = r.entry_type.replace(/^WEEKLY_/, "");
+            const pill = tagPill(r.entry_type);
             return (
-              <div
+              <li
                 key={`${r.log_date}-${r.title}`}
-                className="grid grid-cols-[88px_56px_1fr] items-center gap-3 px-4 py-2 hover:bg-zinc-900/40"
+                className="grid grid-cols-[88px_56px_1fr] items-center gap-4 px-6 py-3 text-sm hover:bg-divider/20"
               >
-                <span className="font-mono tabular-nums text-zinc-500">
+                <span className="font-mono text-xs text-smoke tnum">
                   {DATE_FMT.format(new Date(r.log_date))}
                 </span>
                 <span
-                  className={`text-[10px] uppercase tracking-wide ${tagColor(
-                    r.entry_type,
-                  )}`}
+                  className={`inline-flex justify-center rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-editorial ${pill.cls}`}
                 >
-                  · {tag}
+                  {pill.label}
                 </span>
                 {r.output_link ? (
                   <a
                     href={r.output_link}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="truncate text-zinc-300 hover:text-orange-warm hover:underline"
+                    className="truncate text-ink hover:text-crail hover:underline"
                   >
                     {r.title}
                   </a>
                 ) : (
-                  <span className="truncate text-zinc-300">{r.title}</span>
+                  <span className="truncate text-ink">{r.title}</span>
                 )}
-              </div>
+              </li>
             );
           })
         )}
-      </div>
+      </ul>
     </Card>
   );
 }

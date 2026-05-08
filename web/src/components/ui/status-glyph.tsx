@@ -2,22 +2,22 @@ import { cn } from "@/lib/utils";
 
 type Variant = "ok" | "failed" | "pending" | "live" | "warning" | "running";
 
-const GLYPH: Record<Variant, string> = {
-  ok: "●",
-  failed: "✗",
-  pending: "○",
-  live: "◉",
-  warning: "▲",
-  running: "●",
+const COLOR: Record<Variant, string> = {
+  ok: "bg-success",
+  failed: "bg-destructive",
+  pending: "bg-divider",
+  live: "bg-crail",
+  warning: "bg-warning",
+  running: "bg-crail",
 };
 
-const COLOR: Record<Variant, string> = {
-  ok: "text-success",
-  failed: "text-destructive",
-  pending: "text-zinc-600",
-  live: "text-orange-warm animate-pulse-soft",
-  warning: "text-warning",
-  running: "text-orange-warm animate-pulse-soft",
+const PULSE: Record<Variant, boolean> = {
+  ok: false,
+  failed: false,
+  pending: false,
+  live: true,
+  warning: false,
+  running: true,
 };
 
 interface Props {
@@ -30,14 +30,19 @@ export function StatusGlyph({ variant, label, className }: Props) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 text-xs uppercase tracking-wide",
+        "inline-flex items-center gap-2 text-xs text-smoke",
         className,
       )}
     >
-      <span className={cn("font-bold", COLOR[variant])} aria-hidden>
-        {GLYPH[variant]}
-      </span>
-      {label ? <span className="text-zinc-300">{label}</span> : null}
+      <span
+        aria-hidden
+        className={cn(
+          "h-1.5 w-1.5 rounded-full",
+          COLOR[variant],
+          PULSE[variant] && "animate-pulse-soft",
+        )}
+      />
+      {label ? <span className="text-ink">{label}</span> : null}
     </span>
   );
 }

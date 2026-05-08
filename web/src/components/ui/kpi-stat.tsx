@@ -13,15 +13,15 @@ interface Props {
 }
 
 const DELTA_GLYPH: Record<Direction, string> = {
-  up: "▲",
-  down: "▼",
-  flat: "─",
+  up: "↑",
+  down: "↓",
+  flat: "—",
 };
 
 const DELTA_COLOR: Record<Direction, string> = {
   up: "text-success",
   down: "text-destructive",
-  flat: "text-zinc-500",
+  flat: "text-smoke",
 };
 
 export function KpiStat({
@@ -34,20 +34,18 @@ export function KpiStat({
 }: Props) {
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
-      <div className="text-[11px] uppercase tracking-[0.05em] text-zinc-500">
+      <div className="text-xs uppercase tracking-editorial text-smoke">
         {label}
       </div>
       <div className="flex items-baseline gap-2">
-        <span className="text-3xl font-medium tabular-nums text-zinc-50">
+        <span className="font-display text-3xl font-medium tnum text-ink">
           {value}
         </span>
-        {unit ? (
-          <span className="text-sm text-zinc-400">{unit}</span>
-        ) : null}
+        {unit ? <span className="text-sm text-smoke">{unit}</span> : null}
         {delta ? (
           <span
             className={cn(
-              "ml-auto inline-flex items-center gap-1 text-xs font-mono",
+              "ml-auto inline-flex items-center gap-1 text-xs",
               DELTA_COLOR[delta.direction],
             )}
           >
@@ -56,11 +54,7 @@ export function KpiStat({
           </span>
         ) : null}
       </div>
-      {footer ? (
-        <div className="text-[10px] uppercase tracking-wide text-zinc-600">
-          {footer}
-        </div>
-      ) : null}
+      {footer ? <div className="text-xs text-smoke">{footer}</div> : null}
     </div>
   );
 }

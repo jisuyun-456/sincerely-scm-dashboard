@@ -7,10 +7,7 @@ export function Skeleton({
 }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn(
-        "animate-pulse-soft rounded-sm bg-zinc-800/60",
-        className,
-      )}
+      className={cn("animate-pulse-soft rounded-md bg-divider/60", className)}
       {...props}
     />
   );
