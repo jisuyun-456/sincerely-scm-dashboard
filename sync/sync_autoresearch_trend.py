@@ -79,11 +79,17 @@ def fetch_index(raw_base: str) -> list[dict[str, Any]]:
     r = requests.get(url, timeout=15)
     r.raise_for_status()
     payload = r.json()
-    if isinstance(payload, dict) and "entries" in payload:
-        return payload["entries"]
+    # The pipeline writes { "periods": [...] }
+    if isinstance(payload, dict):
+        for key in ("periods", "entries", "items"):
+            if isinstance(payload.get(key), list):
+                return payload[key]
     if isinstance(payload, list):
         return payload
-    raise ValueError(f"history/index.json shape unexpected: {type(payload).__name__}")
+    raise ValueError(
+        f"history/index.json shape unexpected: {type(payload).__name__} "
+        f"keys={list(payload.keys()) if isinstance(payload, dict) else 'n/a'}"
+    )
 
 
 def fetch_snapshot(raw_base: str, file_path: str) -> dict[str, Any]:
