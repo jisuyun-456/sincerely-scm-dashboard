@@ -80,9 +80,14 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.4" },
         },
+        hop: {
+          "0%, 60%, 100%": { transform: "translateY(0)" },
+          "30%": { transform: "translateY(-2px)" },
+        },
       },
       animation: {
         "pulse-soft": "pulse-soft 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        hop: "hop 1.4s ease-in-out infinite",
       },
     },
   },
