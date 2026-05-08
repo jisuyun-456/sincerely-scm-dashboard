@@ -1,11 +1,9 @@
 """
 sincerely-scm-dashboard sync runner.
 
-Skeleton: writes a single sync_runs heartbeat row to verify the
-GitHub Actions → Supabase pipeline works end-to-end.
-
-Real sync workers (TMS KPI, AutoResearch trend, project tasks, log) get
-added after this skeleton confirms the pipeline.
+Coordinates per-job sync workers and writes a heartbeat row.
+Each worker is responsible for its own sync_runs row; the runner only
+writes the heartbeat to confirm the GH Actions pipeline ran.
 
 Local: cp .env.example .env && fill values && python _sync_runner.py
 CI:    set SUPABASE_URL + SUPABASE_SERVICE_KEY in GitHub Actions secrets.
@@ -19,6 +17,8 @@ from datetime import datetime, timezone
 
 import requests
 from dotenv import load_dotenv
+
+import sync_project_tasks
 
 load_dotenv()
 
@@ -37,21 +37,15 @@ HEADERS = {
 }
 
 
-def insert_sync_run(
-    job_name: str,
-    status: str,
-    started_at: datetime,
-    finished_at: datetime | None,
-    rows_written: int = 0,
-    error_message: str | None = None,
+def insert_heartbeat(
+    started_at: datetime, finished_at: datetime, status: str
 ) -> None:
     payload = {
-        "job_name": job_name,
+        "job_name": "heartbeat",
         "started_at": started_at.isoformat(),
-        "finished_at": finished_at.isoformat() if finished_at else None,
+        "finished_at": finished_at.isoformat(),
         "status": status,
-        "rows_written": rows_written,
-        "error_message": error_message,
+        "rows_written": 0,
         "github_run_id": os.environ.get("GITHUB_RUN_ID"),
     }
     r = requests.post(
@@ -61,37 +55,38 @@ def insert_sync_run(
         timeout=15,
     )
     r.raise_for_status()
-    print(f"  → sync_runs row inserted: id={r.json()[0]['id']}")
+    print(f"  → heartbeat row inserted: id={r.json()[0]['id']}")
 
 
 def main() -> int:
     started = datetime.now(timezone.utc)
-    job = "heartbeat"
-    print(f"[{started.isoformat()}] sync_runner start · job={job}")
+    print(f"[{started.isoformat()}] sync_runner start")
+
+    failures: list[str] = []
+
+    # Job 1: project_tasks
     try:
-        insert_sync_run(
-            job_name=job,
-            status="ok",
-            started_at=started,
-            finished_at=datetime.now(timezone.utc),
-            rows_written=0,
-        )
-        print("[done] heartbeat ok")
-        return 0
-    except Exception as e:
-        finished = datetime.now(timezone.utc)
-        print(f"[error] {e}", file=sys.stderr)
-        try:
-            insert_sync_run(
-                job_name=job,
-                status="failed",
-                started_at=started,
-                finished_at=finished,
-                error_message=str(e)[:500],
-            )
-        except Exception as inner:
-            print(f"[error] also failed to log failure: {inner}", file=sys.stderr)
+        rc = sync_project_tasks.run()
+        if rc != 0:
+            failures.append("project_tasks")
+    except Exception as e:  # noqa: BLE001
+        print(f"[error] project_tasks crashed: {e}", file=sys.stderr)
+        failures.append("project_tasks")
+
+    # Heartbeat (always last)
+    finished = datetime.now(timezone.utc)
+    status = "failed" if failures else "ok"
+    try:
+        insert_heartbeat(started, finished, status)
+    except Exception as e:  # noqa: BLE001
+        print(f"[error] heartbeat insert failed: {e}", file=sys.stderr)
+        failures.append("heartbeat")
+
+    if failures:
+        print(f"[done] sync_runner finished with failures: {failures}")
         return 1
+    print("[done] sync_runner ok")
+    return 0
 
 
 if __name__ == "__main__":

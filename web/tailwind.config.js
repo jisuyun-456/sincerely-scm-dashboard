@@ -5,7 +5,7 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "1.5rem",
       screens: { "2xl": "1400px" },
     },
     extend: {
@@ -39,16 +39,50 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        success: "hsl(142 76% 56%)",
-        warning: "hsl(38 92% 50%)",
+        "orange-warm": "hsl(var(--orange-warm))",
+        success: "hsl(var(--success))",
+        warning: "hsl(var(--warning))",
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "0.25rem",
+        md: "0.1875rem",
+        sm: "0.125rem",
+      },
+      letterSpacing: {
+        terminal: "0.08em",
       },
       fontFamily: {
-        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "monospace"],
+        sans: [
+          '"JetBrains Mono"',
+          '"D2Coding"',
+          '"Geist Mono"',
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Monaco",
+          "Consolas",
+          "monospace",
+        ],
+        mono: [
+          '"JetBrains Mono"',
+          '"D2Coding"',
+          '"Geist Mono"',
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Monaco",
+          "Consolas",
+          "monospace",
+        ],
+      },
+      keyframes: {
+        "pulse-soft": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.4" },
+        },
+      },
+      animation: {
+        "pulse-soft": "pulse-soft 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
     },
   },
