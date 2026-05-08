@@ -5,6 +5,8 @@ import { SectionHeader } from "@/components/ui/section-header";
 import { StatusGlyph } from "@/components/ui/status-glyph";
 import { SyncHealth } from "@/widgets/SyncHealth";
 import { Tasks } from "@/widgets/Tasks";
+import { AutoResearchTrend } from "@/widgets/AutoResearchTrend";
+import { AutoResearchLog } from "@/widgets/AutoResearchLog";
 import { TerminalMascot } from "@/components/ui/terminal-mascot";
 
 type LastSync = {
@@ -74,17 +76,13 @@ export default function App() {
 
         {/* Row 2: Trend chart */}
         <div className="mt-3">
-          <PlaceholderTile
-            title="AUTORESEARCH · KPI TREND · 8W"
-            code="C"
-            wide
-          />
+          <AutoResearchTrend />
         </div>
 
         {/* Row 3: Activity + Log */}
         <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
           <PlaceholderTile title="AGENT ACTIVITY · LIVE" code="E" />
-          <PlaceholderTile title="AUTORESEARCH · LOG" code="F" />
+          <AutoResearchLog />
         </div>
 
         <Footer />

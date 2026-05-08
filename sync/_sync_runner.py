@@ -18,6 +18,8 @@ from datetime import datetime, timezone
 import requests
 from dotenv import load_dotenv
 
+import sync_autoresearch_log
+import sync_autoresearch_trend
 import sync_project_tasks
 
 load_dotenv()
@@ -64,14 +66,19 @@ def main() -> int:
 
     failures: list[str] = []
 
-    # Job 1: project_tasks
-    try:
-        rc = sync_project_tasks.run()
-        if rc != 0:
-            failures.append("project_tasks")
-    except Exception as e:  # noqa: BLE001
-        print(f"[error] project_tasks crashed: {e}", file=sys.stderr)
-        failures.append("project_tasks")
+    jobs = [
+        ("project_tasks", sync_project_tasks.run),
+        ("autoresearch_trend", sync_autoresearch_trend.run),
+        ("autoresearch_log", sync_autoresearch_log.run),
+    ]
+    for name, fn in jobs:
+        try:
+            rc = fn()
+            if rc != 0:
+                failures.append(name)
+        except Exception as e:  # noqa: BLE001
+            print(f"[error] {name} crashed: {e}", file=sys.stderr)
+            failures.append(name)
 
     # Heartbeat (always last)
     finished = datetime.now(timezone.utc)

@@ -15,18 +15,25 @@ CREATE TABLE IF NOT EXISTS tms_kpi (
 );
 
 -- ============================================================
--- 2. autoresearch_trend — weekly KPI history per domain
+-- 2. autoresearch_trend — weekly/monthly KPI history per domain
+--    JSONB kpis to accommodate varying metrics across WMS / TMS.
 -- ============================================================
 CREATE TABLE IF NOT EXISTS autoresearch_trend (
-  period_key TEXT NOT NULL,            -- "2026-W18"
-  domain TEXT NOT NULL,                -- "TMS" | "WMS"
-  internal_fulfillment_pct NUMERIC(5,2),
-  otif_on_time_pct NUMERIC(5,2),
-  promised_date_conversion_pct NUMERIC(5,2),
-  delivery_claims_count INT,
+  period_key TEXT NOT NULL,            -- "2026-W18_review", "2026-04_monthly"
+  domain TEXT NOT NULL,                -- "WMS" | "TMS"
+  report_mode TEXT,                    -- "weekly_review" | "monthly" | "weekly_forecast"
+  period_start DATE,
+  period_end DATE,
+  period_label TEXT,
+  kpis JSONB NOT NULL DEFAULT '{}',
+  generated_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   PRIMARY KEY (period_key, domain)
 );
+CREATE INDEX IF NOT EXISTS idx_autoresearch_trend_period_start
+  ON autoresearch_trend (period_start DESC);
+CREATE INDEX IF NOT EXISTS idx_autoresearch_trend_domain
+  ON autoresearch_trend (domain);
 
 -- ============================================================
 -- 3. project_tasks — daily count snapshot per priority

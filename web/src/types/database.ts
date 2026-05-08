@@ -27,16 +27,25 @@ export type Database = {
         Row: {
           period_key: string;
           domain: string;
-          internal_fulfillment_pct: number | null;
-          otif_on_time_pct: number | null;
-          promised_date_conversion_pct: number | null;
-          delivery_claims_count: number | null;
+          report_mode: string | null;
+          period_start: string | null;
+          period_end: string | null;
+          period_label: string | null;
+          kpis: Record<string, number | null>;
+          generated_at: string | null;
           created_at: string;
         };
-        Insert: Omit<
-          Database["public"]["Tables"]["autoresearch_trend"]["Row"],
-          "created_at"
-        > & { created_at?: string };
+        Insert: {
+          period_key: string;
+          domain: string;
+          report_mode?: string | null;
+          period_start?: string | null;
+          period_end?: string | null;
+          period_label?: string | null;
+          kpis?: Record<string, number | null>;
+          generated_at?: string | null;
+          created_at?: string;
+        };
         Update: Partial<
           Database["public"]["Tables"]["autoresearch_trend"]["Insert"]
         >;
