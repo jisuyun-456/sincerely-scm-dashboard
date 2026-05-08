@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { Card } from "@/components/ui/card";
-import { SectionHeader } from "@/components/ui/section-header";
 import { StatusGlyph } from "@/components/ui/status-glyph";
 import { SyncHealth } from "@/widgets/SyncHealth";
 import { Tasks } from "@/widgets/Tasks";
+import { TmsKpi } from "@/widgets/TmsKpi";
+import { AgentFeed } from "@/widgets/AgentFeed";
 import { AutoResearchTrend } from "@/widgets/AutoResearchTrend";
 import { AutoResearchLog } from "@/widgets/AutoResearchLog";
 
@@ -67,7 +67,7 @@ export default function App() {
       <main className="mx-auto max-w-[1280px] px-6 pb-16 pt-8 sm:px-8 lg:px-12">
         {/* Row 1: KPI + Status tiles */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <PlaceholderTile title="TMS · Active" code="B" />
+          <TmsKpi />
           <Tasks />
           <SyncHealth />
         </div>
@@ -79,7 +79,7 @@ export default function App() {
 
         {/* Row 3: Activity + Log */}
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-          <PlaceholderTile title="Agent Activity · Live" code="E" />
+          <AgentFeed />
           <AutoResearchLog />
         </div>
 
@@ -143,19 +143,6 @@ function Header({
   );
 }
 
-function PlaceholderTile({ title, code }: { title: string; code: string }) {
-  return (
-    <Card className="min-h-[200px]">
-      <SectionHeader title={title} meta={`Widget ${code}`} />
-      <div className="flex h-full items-center justify-center px-6 py-10">
-        <div className="text-center text-sm text-smoke">
-          <div>Coming next</div>
-          <div className="mt-1 text-xs text-smoke/60">— — —</div>
-        </div>
-      </div>
-    </Card>
-  );
-}
 
 function Footer() {
   return (

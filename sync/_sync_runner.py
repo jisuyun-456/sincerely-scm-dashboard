@@ -21,6 +21,7 @@ from dotenv import load_dotenv
 import sync_autoresearch_log
 import sync_autoresearch_trend
 import sync_project_tasks
+import sync_tms_kpi
 
 load_dotenv()
 
@@ -67,6 +68,7 @@ def main() -> int:
     failures: list[str] = []
 
     jobs = [
+        ("tms_kpi", sync_tms_kpi.run),
         ("project_tasks", sync_project_tasks.run),
         ("autoresearch_trend", sync_autoresearch_trend.run),
         ("autoresearch_log", sync_autoresearch_log.run),
