@@ -102,7 +102,7 @@ function Header({
         <div className="flex items-baseline gap-3">
           <span
             aria-hidden
-            className="font-display text-3xl leading-none text-crail"
+            className="inline-block font-display text-3xl leading-none text-crail animate-spin-slow"
           >
             ❈
           </span>

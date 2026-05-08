@@ -42,6 +42,7 @@ interface Props {
   tasks: Task[];
   activeTab: TaskTab;
   onTabChange: (tab: TaskTab) => void;
+  onSelect?: (task: Task) => void;
   className?: string;
 }
 
@@ -49,6 +50,7 @@ export function TaskDetail({
   tasks,
   activeTab,
   onTabChange,
+  onSelect,
   className,
 }: Props) {
   const counts = useMemo(() => {
@@ -115,7 +117,19 @@ export function TaskDetail({
           filtered.map((t) => (
             <li
               key={t.id}
-              className="grid grid-cols-[auto_72px_1fr_auto] items-baseline gap-3 px-6 py-3 hover:bg-divider/20"
+              role={onSelect ? "button" : undefined}
+              tabIndex={onSelect ? 0 : undefined}
+              onClick={() => onSelect?.(t)}
+              onKeyDown={(e) => {
+                if (onSelect && (e.key === "Enter" || e.key === " ")) {
+                  e.preventDefault();
+                  onSelect(t);
+                }
+              }}
+              className={cn(
+                "grid grid-cols-[auto_72px_1fr_auto] items-baseline gap-3 px-6 py-3 hover:bg-divider/20",
+                onSelect && "cursor-pointer",
+              )}
             >
               <span
                 aria-hidden

@@ -6,6 +6,7 @@ import { InlineProgress } from "@/components/ui/inline-progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/lib/supabase";
 import { TaskDetail, type TaskTab } from "@/widgets/TaskDetail";
+import { TaskModal } from "@/widgets/TaskModal";
 import type { FeatureList, Task } from "@/types/feature-list";
 
 type Row = {
@@ -37,6 +38,7 @@ export function Tasks() {
   const [tab, setTab] = useState<TaskTab>("all");
   const [tasks, setTasks] = useState<Task[] | null>(null);
   const [tasksError, setTasksError] = useState<string | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -82,6 +84,7 @@ export function Tasks() {
   };
 
   return (
+    <>
     <Card>
       <SectionHeader
         title="Tasks · Open"
@@ -157,10 +160,16 @@ export function Tasks() {
               tasks={tasks ?? []}
               activeTab={tab}
               onTabChange={setTab}
+              onSelect={setSelectedTask}
             />
           </div>
         )
       ) : null}
     </Card>
+
+      {selectedTask && (
+        <TaskModal task={selectedTask} onClose={() => setSelectedTask(null)} />
+      )}
+    </>
   );
 }

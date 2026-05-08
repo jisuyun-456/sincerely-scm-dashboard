@@ -92,10 +92,15 @@ export default {
           "0%": { opacity: "0", transform: "translateY(-4px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        "spin-slow": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         "pulse-soft": "pulse-soft 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "fade-in": "fade-in 200ms ease-out",
+        "spin-slow": "spin-slow 12s linear infinite",
       },
     },
   },
