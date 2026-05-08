@@ -5,6 +5,7 @@ import { SectionHeader } from "@/components/ui/section-header";
 import { StatusGlyph } from "@/components/ui/status-glyph";
 import { SyncHealth } from "@/widgets/SyncHealth";
 import { Tasks } from "@/widgets/Tasks";
+import { TerminalMascot } from "@/components/ui/terminal-mascot";
 
 type LastSync = {
   job_name: string;
@@ -102,7 +103,8 @@ function Header({
   return (
     <header className="border-b border-zinc-800 bg-black px-6 py-4">
       <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-4">
-        <div className="flex items-baseline gap-3">
+        <div className="flex items-center gap-3">
+          <TerminalMascot className="text-sm" />
           <h1 className="text-base font-semibold uppercase tracking-terminal text-orange-warm">
             SINCERELY-SCM
           </h1>
