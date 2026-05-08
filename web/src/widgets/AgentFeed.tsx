@@ -15,6 +15,25 @@ type AgentEvent = {
   session_id: string | null;
 };
 
+type SyncRun = {
+  id: number;
+  job_name: string;
+  started_at: string;
+  finished_at: string | null;
+  status: string;
+  rows_written: number | null;
+};
+
+type FeedItem = {
+  key: string;
+  type: "agent" | "sync";
+  time: string;
+  label: string;
+  sublabel: string | null;
+  status: string;
+  duration_ms: number | null;
+};
+
 const TIME_FORMAT = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Asia/Seoul",
   hour: "2-digit",
@@ -43,40 +62,81 @@ function formatDuration(ms: number | null): string {
 function statusVariant(
   status: string,
 ): Parameters<typeof StatusGlyph>[0]["variant"] {
-  if (status === "completed") return "ok";
+  if (status === "completed" || status === "ok") return "ok";
   if (status === "failed") return "failed";
   if (status === "started") return "running";
   return "pending";
 }
 
+function agentToFeedItem(ev: AgentEvent): FeedItem {
+  return {
+    key: `agent-${ev.id}`,
+    type: "agent",
+    time: ev.event_at,
+    label: ev.agent_name ?? "claude-code",
+    sublabel: ev.tool_name ?? null,
+    status: ev.status,
+    duration_ms: ev.duration_ms,
+  };
+}
+
+function syncToFeedItem(run: SyncRun): FeedItem {
+  const duration_ms =
+    run.finished_at
+      ? Date.parse(run.finished_at) - Date.parse(run.started_at)
+      : null;
+  const sublabel =
+    run.rows_written != null && run.rows_written > 0
+      ? `${run.rows_written} rows`
+      : null;
+  return {
+    key: `sync-${run.id}`,
+    type: "sync",
+    time: run.started_at,
+    label: run.job_name,
+    sublabel,
+    status: run.status,
+    duration_ms,
+  };
+}
+
+function mergeFeed(items: FeedItem[]): FeedItem[] {
+  return [...items].sort((a, b) => b.time.localeCompare(a.time)).slice(0, 25);
+}
+
 export function AgentFeed() {
-  const [events, setEvents] = useState<AgentEvent[] | null>(null);
+  const [items, setItems] = useState<FeedItem[] | null>(null);
   const [live, setLive] = useState(false);
   const containerRef = useRef<HTMLUListElement>(null);
 
-  // Initial fetch: last 20 events
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const { data, error } = await supabase
-        .from("agent_events")
-        .select("id, event_at, agent_name, status, tool_name, duration_ms, session_id")
-        .order("event_at", { ascending: false })
-        .limit(20);
+      const [agentRes, syncRes] = await Promise.all([
+        supabase
+          .from("agent_events")
+          .select("id, event_at, agent_name, status, tool_name, duration_ms, session_id")
+          .order("event_at", { ascending: false })
+          .limit(15),
+        supabase
+          .from("sync_runs")
+          .select("id, job_name, started_at, finished_at, status, rows_written")
+          .neq("job_name", "heartbeat")
+          .order("started_at", { ascending: false })
+          .limit(15),
+      ]);
       if (cancelled) return;
-      if (error) {
-        console.error("AgentFeed fetch error:", error);
-        setEvents([]);
-        return;
-      }
-      setEvents((data ?? []) as AgentEvent[]);
+      if (agentRes.error) console.error("AgentFeed agent fetch:", agentRes.error);
+      if (syncRes.error) console.error("AgentFeed sync fetch:", syncRes.error);
+
+      const agentItems = ((agentRes.data ?? []) as AgentEvent[]).map(agentToFeedItem);
+      const syncItems = ((syncRes.data ?? []) as SyncRun[]).map(syncToFeedItem);
+      setItems(mergeFeed([...agentItems, ...syncItems]));
     })();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
-  // Realtime subscription
+  // Realtime for agent_events only
   useEffect(() => {
     const channel = supabase
       .channel("agent_events_live")
@@ -84,10 +144,10 @@ export function AgentFeed() {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "agent_events" },
         (payload) => {
-          const incoming = payload.new as AgentEvent;
-          setEvents((prev) => {
+          const incoming = agentToFeedItem(payload.new as AgentEvent);
+          setItems((prev) => {
             if (!prev) return [incoming];
-            return [incoming, ...prev].slice(0, 20);
+            return mergeFeed([incoming, ...prev]);
           });
         },
       )
@@ -95,24 +155,13 @@ export function AgentFeed() {
         setLive(status === "SUBSCRIBED");
       });
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, []);
 
-  // Today summary
   const today = todayKst();
-  const todayEvents = (events ?? []).filter((e) =>
-    e.event_at.startsWith(today),
-  );
-  const failCount = todayEvents.filter((e) => e.status === "failed").length;
-  const durations = todayEvents
-    .filter((e) => e.duration_ms !== null)
-    .map((e) => e.duration_ms as number);
-  const avgDuration =
-    durations.length > 0
-      ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length)
-      : null;
+  const todayItems = (items ?? []).filter((e) => e.time.startsWith(today));
+  const agentCount = todayItems.filter((e) => e.type === "agent").length;
+  const syncCount = todayItems.filter((e) => e.type === "sync").length;
 
   const meta = live ? (
     <span className="inline-flex items-center gap-1.5">
@@ -128,9 +177,9 @@ export function AgentFeed() {
 
   return (
     <Card>
-      <SectionHeader title="Agent Activity" meta={meta} />
+      <SectionHeader title="Ops Activity" meta={meta} />
       <div className="px-6 py-5">
-        {events === null ? (
+        {items === null ? (
           <div className="space-y-3">
             {[...Array(5)].map((_, i) => (
               <div key={i} className="flex items-center gap-3">
@@ -140,52 +189,57 @@ export function AgentFeed() {
               </div>
             ))}
           </div>
-        ) : events.length === 0 ? (
+        ) : items.length === 0 ? (
           <p className="text-sm text-smoke">
-            No events yet. Sessions will appear here once hooks are configured.
+            No events yet. Sessions and sync runs will appear here.
           </p>
         ) : (
           <ul ref={containerRef} className="divide-y divide-divider/40">
-            {events.map((ev) => (
+            {items.map((item) => (
               <li
-                key={ev.id}
-                className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-3 py-2.5 text-sm"
+                key={item.key}
+                className="grid grid-cols-[auto_auto_1fr_auto_auto] items-center gap-2.5 py-2.5 text-sm"
               >
-                <span className="font-mono text-xs text-smoke tnum">
-                  {formatTime(ev.event_at)}
+                <span className="font-mono text-xs text-smoke tnum w-10">
+                  {formatTime(item.time)}
                 </span>
-                <span className="truncate text-ink">
-                  {ev.agent_name ?? "claude-code"}
-                  {ev.tool_name && (
-                    <span className="ml-1.5 text-xs text-smoke">
-                      · {ev.tool_name}
-                    </span>
+                <span
+                  aria-hidden
+                  className={
+                    item.type === "agent"
+                      ? "text-crail text-[11px] leading-none"
+                      : "text-smoke text-[11px] leading-none"
+                  }
+                >
+                  {item.type === "agent" ? "◎" : "⟳"}
+                </span>
+                <span className="truncate text-ink text-xs">
+                  {item.label}
+                  {item.sublabel && (
+                    <span className="ml-1.5 text-smoke">· {item.sublabel}</span>
                   )}
                 </span>
                 <span className="font-mono text-xs text-smoke tnum">
-                  {formatDuration(ev.duration_ms)}
+                  {formatDuration(item.duration_ms)}
                 </span>
                 <StatusGlyph
-                  variant={statusVariant(ev.status)}
-                  label={ev.status}
+                  variant={statusVariant(item.status)}
+                  label={item.status}
                 />
               </li>
             ))}
           </ul>
         )}
       </div>
-      {events !== null && events.length > 0 && (
+      {items !== null && items.length > 0 && (
         <div className="flex items-center justify-between border-t border-divider/70 px-6 py-3 text-xs text-smoke">
           <span>
-            Today · {todayEvents.length} runs
-            {failCount > 0 && (
-              <span className="ml-1 text-crail">· {failCount} failed</span>
-            )}
-            {avgDuration !== null && (
-              <span className="ml-1">· avg {formatDuration(avgDuration)}</span>
-            )}
+            Today
+            {agentCount > 0 && <span className="ml-1">· {agentCount} sessions</span>}
+            {syncCount > 0 && <span className="ml-1">· {syncCount} syncs</span>}
+            {agentCount === 0 && syncCount === 0 && <span className="ml-1">· no activity</span>}
           </span>
-          <span>SCM_WORK · hooks</span>
+          <span>SCM_WORK · hooks + cron</span>
         </div>
       )}
     </Card>
