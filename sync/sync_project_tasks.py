@@ -26,7 +26,7 @@ from typing import Any
 import requests
 
 PRIORITY_KEYS = ("critical", "high", "medium", "low", "done")
-DEFAULT_RAW_BASE = "https://raw.githubusercontent.com/jisuyun-456/SCM_WORK/main"
+DEFAULT_RAW_BASE = "https://raw.githubusercontent.com/jisuyun-456/sincerely-scm-pipeline/main"
 
 
 def _supabase_headers(key: str) -> dict[str, str]:
