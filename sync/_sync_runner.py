@@ -21,9 +21,12 @@ from dotenv import load_dotenv
 import sync_autoresearch_log
 import sync_autoresearch_trend
 import sync_project_tasks
+import sync_tms_carrier_otif
+import sync_tms_daily_volume
 import sync_tms_delivery_notes
 import sync_tms_kpi
 import sync_tms_multi_to
+import sync_tms_pod_aging
 import sync_wms_dayoung
 
 load_dotenv()
@@ -74,6 +77,9 @@ def main() -> int:
         ("tms_kpi", sync_tms_kpi.run),
         ("tms_delivery_notes", sync_tms_delivery_notes.run),
         ("tms_multi_to", sync_tms_multi_to.run),
+        ("tms_carrier_otif", sync_tms_carrier_otif.run),
+        ("tms_daily_volume", sync_tms_daily_volume.run),
+        ("tms_pod_aging", sync_tms_pod_aging.run),
         ("wms_dayoung", sync_wms_dayoung.run),
         ("project_tasks", sync_project_tasks.run),
         ("autoresearch_trend", sync_autoresearch_trend.run),
