@@ -5,6 +5,8 @@ import { StatusGlyph } from "@/components/ui/status-glyph";
 import { HomePage } from "@/pages/HomePage";
 import { TmsPage } from "@/pages/TmsPage";
 import { WmsPage } from "@/pages/WmsPage";
+import { VaultPage } from "@/pages/VaultPage";
+import { LogPage } from "@/pages/LogPage";
 
 type LastSync = {
   job_name: string;
@@ -67,6 +69,8 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/tms" element={<TmsPage />} />
           <Route path="/wms" element={<WmsPage />} />
+          <Route path="/vault" element={<VaultPage />} />
+          <Route path="/log" element={<LogPage />} />
         </Routes>
         <Footer />
       </main>
@@ -133,6 +137,8 @@ function Header({
             <NavLink to="/" label="Home" />
             <NavLink to="/tms" label="TMS" />
             <NavLink to="/wms" label="WMS" />
+            <NavLink to="/vault" label="Vault" />
+            <NavLink to="/log" label="Log" />
           </nav>
         </div>
       </div>
@@ -143,7 +149,7 @@ function Header({
 function Footer() {
   return (
     <div className="mt-10 flex flex-wrap items-center justify-between gap-2 border-t border-divider/70 pt-4 text-xs text-smoke">
-      <span>Sincerely SCM · Dashboard · v1.7</span>
+      <span>Sincerely SCM · Dashboard · v1.8</span>
       <span>Solo mode · daily refresh @ 00:00 KST</span>
     </div>
   );

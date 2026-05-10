@@ -16,6 +16,12 @@ type Row = {
 const KNOWN_JOBS = [
   { id: "heartbeat", label: "Heartbeat" },
   { id: "tms_kpi", label: "TMS KPI" },
+  { id: "tms_delivery_notes", label: "Delivery Notes" },
+  { id: "tms_multi_to", label: "Multi TO" },
+  { id: "wms_dayoung", label: "다영기획" },
+  { id: "tms_carrier_otif", label: "Carrier OTIF" },
+  { id: "tms_daily_volume", label: "Daily Volume" },
+  { id: "tms_pod_aging", label: "POD Aging" },
   { id: "project_tasks", label: "Project Tasks" },
   { id: "autoresearch_trend", label: "AutoResearch Trend" },
   { id: "autoresearch_log", label: "AutoResearch Log" },
