@@ -132,6 +132,60 @@ DROP POLICY IF EXISTS anon_insert_agent_events ON agent_events;
 CREATE POLICY anon_insert_agent_events ON agent_events FOR INSERT TO anon WITH CHECK (true);
 
 -- ============================================================
+-- 7. tms_delivery_notes — 2-week rolling shipment special notes
+-- ============================================================
+CREATE TABLE IF NOT EXISTS tms_delivery_notes (
+  sc_id          TEXT PRIMARY KEY,
+  pna_code       TEXT NOT NULL DEFAULT '',
+  pna_name       TEXT,
+  shipment_date  DATE,
+  delivery_notes TEXT NOT NULL,
+  status         TEXT,
+  synced_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_tms_delivery_notes_date
+  ON tms_delivery_notes (shipment_date DESC);
+ALTER TABLE tms_delivery_notes ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS anon_select_tms_delivery_notes ON tms_delivery_notes;
+CREATE POLICY anon_select_tms_delivery_notes ON tms_delivery_notes FOR SELECT TO anon USING (true);
+
+-- ============================================================
+-- 8. tms_multi_to_weekly — weekly PNAs with 2+ Transport Orders
+-- ============================================================
+CREATE TABLE IF NOT EXISTS tms_multi_to_weekly (
+  week_start  DATE    NOT NULL,
+  pna_code    TEXT    NOT NULL,
+  pna_name    TEXT,
+  to_count    INT     NOT NULL,
+  to_list     JSONB   NOT NULL DEFAULT '[]',
+  synced_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (week_start, pna_code)
+);
+ALTER TABLE tms_multi_to_weekly ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS anon_select_tms_multi_to_weekly ON tms_multi_to_weekly;
+CREATE POLICY anon_select_tms_multi_to_weekly ON tms_multi_to_weekly FOR SELECT TO anon USING (true);
+
+-- ============================================================
+-- 9. wms_dayoung_schedule — upcoming 다영기획 임가공 jobs
+-- ============================================================
+CREATE TABLE IF NOT EXISTS wms_dayoung_schedule (
+  pks_id          TEXT PRIMARY KEY,
+  project         TEXT,
+  scheduled_date  DATE,
+  movement_date   DATE,
+  material_status TEXT,
+  progress_status TEXT[],
+  items           TEXT,
+  quantity        INT,
+  synced_at       TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_wms_dayoung_schedule_date
+  ON wms_dayoung_schedule (scheduled_date ASC);
+ALTER TABLE wms_dayoung_schedule ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS anon_select_wms_dayoung_schedule ON wms_dayoung_schedule;
+CREATE POLICY anon_select_wms_dayoung_schedule ON wms_dayoung_schedule FOR SELECT TO anon USING (true);
+
+-- ============================================================
 -- Realtime publication (for widget E live updates)
 -- ============================================================
 -- Supabase Realtime publishes changes to the `supabase_realtime` publication.

@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { StatusGlyph } from "@/components/ui/status-glyph";
-import { SyncHealth } from "@/widgets/SyncHealth";
-import { Tasks } from "@/widgets/Tasks";
-import { TmsKpi } from "@/widgets/TmsKpi";
-import { AgentFeed } from "@/widgets/AgentFeed";
-import { AutoResearchTrend } from "@/widgets/AutoResearchTrend";
-import { AutoResearchLog } from "@/widgets/AutoResearchLog";
+import { HomePage } from "@/pages/HomePage";
+import { TmsPage } from "@/pages/TmsPage";
+import { WmsPage } from "@/pages/WmsPage";
 
 type LastSync = {
   job_name: string;
@@ -65,27 +63,27 @@ export default function App() {
     <div className="min-h-screen bg-background text-foreground">
       <Header lastSync={lastSync} error={error} />
       <main className="mx-auto max-w-[1280px] px-6 pb-16 pt-8 sm:px-8 lg:px-12">
-        {/* Row 1: KPI + Status tiles */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <TmsKpi />
-          <Tasks />
-          <SyncHealth />
-        </div>
-
-        {/* Row 2: Trend chart */}
-        <div className="mt-4">
-          <AutoResearchTrend />
-        </div>
-
-        {/* Row 3: Activity + Log */}
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-          <AgentFeed />
-          <AutoResearchLog />
-        </div>
-
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/tms" element={<TmsPage />} />
+          <Route path="/wms" element={<WmsPage />} />
+        </Routes>
         <Footer />
       </main>
     </div>
+  );
+}
+
+function NavLink({ to, label }: { to: string; label: string }) {
+  const { pathname } = useLocation();
+  const active = pathname === to;
+  return (
+    <Link
+      to={to}
+      className={active ? "text-ink font-medium" : "hover:text-ink text-smoke"}
+    >
+      {label}
+    </Link>
   );
 }
 
@@ -106,9 +104,9 @@ function Header({
           >
             ❈
           </span>
-          <h1 className="font-display text-2xl font-medium tracking-tight text-ink">
+          <Link to="/" className="font-display text-2xl font-medium tracking-tight text-ink hover:opacity-80">
             Sincerely SCM
-          </h1>
+          </Link>
           <span className="text-sm text-smoke">Agentic OS</span>
         </div>
 
@@ -132,10 +130,9 @@ function Header({
           )}
           <span className="text-divider">·</span>
           <nav className="flex items-center gap-3 text-xs">
-            <span className="hover:text-ink cursor-default">Vault</span>
-            <span className="hover:text-ink cursor-default">TMS</span>
-            <span className="hover:text-ink cursor-default">WMS</span>
-            <span className="hover:text-ink cursor-default">Log</span>
+            <NavLink to="/" label="Home" />
+            <NavLink to="/tms" label="TMS" />
+            <NavLink to="/wms" label="WMS" />
           </nav>
         </div>
       </div>
@@ -143,11 +140,10 @@ function Header({
   );
 }
 
-
 function Footer() {
   return (
     <div className="mt-10 flex flex-wrap items-center justify-between gap-2 border-t border-divider/70 pt-4 text-xs text-smoke">
-      <span>Sincerely SCM · Dashboard · v1.6</span>
+      <span>Sincerely SCM · Dashboard · v1.7</span>
       <span>Solo mode · daily refresh @ 00:00 KST</span>
     </div>
   );

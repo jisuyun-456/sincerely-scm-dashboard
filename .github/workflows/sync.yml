@@ -29,6 +29,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           AIRTABLE_PAT_TMS: ${{ secrets.AIRTABLE_PAT_TMS }}
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_barcode_PAT }}
           AIRTABLE_BASE_TMS: ${{ secrets.AIRTABLE_BASE_TMS }}
           SCM_WORK_RAW_BASE: ${{ secrets.SCM_WORK_RAW_BASE }}
           GITHUB_RUN_ID: ${{ github.run_id }}
