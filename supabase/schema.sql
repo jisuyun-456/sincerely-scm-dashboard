@@ -186,6 +186,57 @@ DROP POLICY IF EXISTS anon_select_wms_dayoung_schedule ON wms_dayoung_schedule;
 CREATE POLICY anon_select_wms_dayoung_schedule ON wms_dayoung_schedule FOR SELECT TO anon USING (true);
 
 -- ============================================================
+-- 10. tms_carrier_otif — daily per-carrier delivery rate snapshot
+-- ============================================================
+CREATE TABLE IF NOT EXISTS tms_carrier_otif (
+  snapshot_date   DATE    NOT NULL,
+  partner_name    TEXT    NOT NULL,
+  total_shipments INT     NOT NULL DEFAULT 0,
+  delivered_count INT     NOT NULL DEFAULT 0,
+  otif_pct        NUMERIC(5,2),
+  synced_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (snapshot_date, partner_name)
+);
+CREATE INDEX IF NOT EXISTS idx_tms_carrier_otif_date
+  ON tms_carrier_otif (snapshot_date DESC);
+ALTER TABLE tms_carrier_otif ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS anon_select_tms_carrier_otif ON tms_carrier_otif;
+CREATE POLICY anon_select_tms_carrier_otif ON tms_carrier_otif FOR SELECT TO anon USING (true);
+
+-- ============================================================
+-- 11. tms_daily_volume — daily shipment volume snapshot
+-- ============================================================
+CREATE TABLE IF NOT EXISTS tms_daily_volume (
+  date            DATE PRIMARY KEY,
+  sent_count      INT  NOT NULL DEFAULT 0,
+  delivered_count INT  NOT NULL DEFAULT 0,
+  pending_count   INT  NOT NULL DEFAULT 0,
+  synced_at       TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+ALTER TABLE tms_daily_volume ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS anon_select_tms_daily_volume ON tms_daily_volume;
+CREATE POLICY anon_select_tms_daily_volume ON tms_daily_volume FOR SELECT TO anon USING (true);
+
+-- ============================================================
+-- 12. tms_pod_aging — in-transit shipments with aging days
+-- ============================================================
+CREATE TABLE IF NOT EXISTS tms_pod_aging (
+  snapshot_date  DATE    NOT NULL,
+  shipment_id    TEXT    NOT NULL,
+  sc_id          TEXT,
+  shipment_date  DATE,
+  aging_days     INT,
+  status         TEXT,
+  synced_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (snapshot_date, shipment_id)
+);
+CREATE INDEX IF NOT EXISTS idx_tms_pod_aging_snapshot
+  ON tms_pod_aging (snapshot_date DESC);
+ALTER TABLE tms_pod_aging ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS anon_select_tms_pod_aging ON tms_pod_aging;
+CREATE POLICY anon_select_tms_pod_aging ON tms_pod_aging FOR SELECT TO anon USING (true);
+
+-- ============================================================
 -- Realtime publication (for widget E live updates)
 -- ============================================================
 -- Supabase Realtime publishes changes to the `supabase_realtime` publication.
