@@ -10,6 +10,7 @@ export interface PipelineKpi {
 export interface PipelineInboundSummary {
   total_cnt: number;
   total_in_qty: number;
+  total_stock_qty: number;
   completed: number;
   unconfirmed: number;
   completion_rate: number;
@@ -17,15 +18,12 @@ export interface PipelineInboundSummary {
 
 export interface PipelineQcSummary {
   qc_cnt: number;
+  total_qc_qty: number;
+  sample_rate: number;
+  actual_qc_cnt: number;
   total_defect: number;
   defect_rate: number;
   target_met: boolean;
-}
-
-export interface PipelineQcIssue {
-  total_cnt: number;
-  issue_cnt: number;
-  cat_counts: Record<string, number>;
 }
 
 export interface PipelineShipmentSummary {
@@ -34,6 +32,10 @@ export interface PipelineShipmentSummary {
   completed: number;
   pending: number;
   cost: number;
+  revenue: number;
+  profit: number;
+  cbm_per_shipment: number;
+  cbm_unit_cost: number;
 }
 
 export interface PipelineA1Utilization {
@@ -54,27 +56,100 @@ export interface PipelineNextWeek {
   by_date: Record<string, { cnt: number; pending: number }>;
 }
 
+export interface PipelineBoxType {
+  counts: Record<string, number>;
+  pct: Record<string, number>;
+  total: number;
+}
+
+export interface PipelinePartner {
+  name: string;
+  cnt: number;
+  cbm: number;
+}
+
+export interface PipelineTopItem {
+  name: string;
+  qty: number;
+  cbm: number;
+}
+
+export interface PipelineQuality {
+  total_records?: number;
+  missing_box_qty: number;
+  missing_rate: number;
+  same_day_create: number;
+  same_day_rate: number;
+  avg_leadtime_days: number;
+}
+
+export interface PipelineCbmSources {
+  manual: number;
+  product_match: number;
+  box_parse: number;
+  unmatched: number;
+}
+
+export interface PipelineDriverWorkDays {
+  count: number;
+  dates: string[];
+  labels: string[];
+}
+
+export interface PipelineByDateShipment {
+  cnt: number;
+  cbm: number;
+  completed: number;
+  pending: number;
+  revenue: number;
+  cost: number;
+}
+
 export interface PipelineData {
   generated_at: string;
   report_mode: string;
   period_key: string;
   period: { label: string; start: string; end: string; week_label?: string };
   kpi: PipelineKpi;
-  inbound: { summary: PipelineInboundSummary };
-  qc: { summary: PipelineQcSummary; issue_summary: PipelineQcIssue };
+  inbound: {
+    summary: PipelineInboundSummary;
+    by_date: Record<string, { cnt: number; in_qty: number }>;
+    by_purpose: Record<string, { cnt: number; qty: number }>;
+    not_recv_by_partner: Record<string, number>;
+  };
+  qc: {
+    summary: PipelineQcSummary;
+    result_dist: Record<string, number>;
+    defect_by_item: { name: string; qc_qty: number; defect: number; defect_rate: number }[];
+    issue_summary: {
+      total_cnt: number;
+      issue_cnt: number;
+      cat_counts: Record<string, number>;
+    };
+  };
   material: {
     picking: {
-      project: { count: number };
-      a1_to_partner: { count: number };
+      project: { count: number; by_date: Record<string, number> };
+      a1_to_partner: { count: number; by_date: Record<string, number> };
     };
-    issues: { total: number };
+    issues: { total: number; by_type: Record<string, number>; usage_total: number };
+    usage: { cumulative_2026: number };
   };
   shipment: {
     summary: PipelineShipmentSummary;
-    confidence: number;
-    a1_utilization: PipelineA1Utilization;
+    by_date: Record<string, PipelineByDateShipment>;
+    box_type: PipelineBoxType;
+    top_items: PipelineTopItem[];
+    partners: PipelinePartner[];
+    driver_daily: Record<string, Record<string, number>>;
+    driver_weekly: Record<string, number>;
+    driver_weekly_max: Record<string, number>;
     driver_pct: Record<string, number>;
-    quality: { missing_rate: number; avg_leadtime_days: number };
+    driver_work_days: Record<string, PipelineDriverWorkDays>;
+    quality: PipelineQuality;
+    confidence: number;
+    cbm_sources: PipelineCbmSources;
+    a1_utilization: PipelineA1Utilization;
   };
   weekly: {
     trend: PipelineTrendPoint[];
