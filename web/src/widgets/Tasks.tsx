@@ -155,7 +155,7 @@ export function Tasks() {
             ⚠ {tasksError}
           </div>
         ) : (
-          <div className="border-t border-divider/70">
+          <div className="border-t border-divider/70 max-h-[440px] overflow-y-auto">
             <TaskDetail
               tasks={tasks ?? []}
               activeTab={tab}

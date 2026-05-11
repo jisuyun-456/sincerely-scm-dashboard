@@ -11,9 +11,9 @@ export function HomePage() {
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <div className="md:col-span-2">
-          <TmsKpi />
+          <Tasks />
         </div>
-        <Tasks />
+        <TmsKpi />
       </div>
       <div className="mt-4">
         <SimpleTodo />

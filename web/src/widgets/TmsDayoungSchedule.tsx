@@ -48,15 +48,24 @@ function progressColor(statuses: string[] | null): string {
   return "bg-smoke/10 text-smoke";
 }
 
+function kstDateString(offsetDays = 0): string {
+  const ms = Date.now() + 9 * 60 * 60 * 1000 + offsetDays * 86_400_000;
+  return new Date(ms).toISOString().slice(0, 10);
+}
+
 export function TmsDayoungSchedule() {
   const [rows, setRows] = useState<DayoungRow[] | "loading" | null>("loading");
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
+      const todayStr = kstDateString(0);
+      const endStr = kstDateString(14);
       const { data, error } = await supabase
         .from("wms_dayoung_schedule")
         .select("pks_id, project, scheduled_date, movement_date, material_status, progress_status, items, quantity")
+        .gte("scheduled_date", todayStr)
+        .lte("scheduled_date", endStr)
         .order("scheduled_date", { ascending: true });
       if (cancelled) return;
       if (error) {
