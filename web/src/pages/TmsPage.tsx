@@ -10,6 +10,7 @@ import { TmsDailyVolume } from "@/widgets/TmsDailyVolume";
 import { TmsPodAging } from "@/widgets/TmsPodAging";
 import { TmsKpi } from "@/widgets/TmsKpi";
 import { WeeklyKpiSummary } from "@/widgets/WeeklyKpiSummary";
+import { PipelineTmsKpi } from "@/widgets/PipelineTmsKpi";
 
 const TABS = [
   { key: "work", label: "업무처리" },
@@ -53,7 +54,8 @@ export function TmsPage() {
 
       {tab === "analytics" && (
         <>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <PipelineTmsKpi />
+          <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
             <TmsOtifTrend />
             <TmsCarrierRanking />
           </div>

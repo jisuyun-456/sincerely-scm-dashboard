@@ -3,6 +3,7 @@ import { PageTabs } from "@/components/ui/page-tabs";
 import { AutoResearchTrend } from "@/widgets/AutoResearchTrend";
 import { AutoResearchLog } from "@/widgets/AutoResearchLog";
 import { WeeklyKpiSummary } from "@/widgets/WeeklyKpiSummary";
+import { PipelineWmsKpi } from "@/widgets/PipelineWmsKpi";
 
 const TABS = [
   { key: "work", label: "업무처리" },
@@ -29,7 +30,10 @@ export function WmsPage() {
 
       {tab === "analytics" && (
         <>
-          <AutoResearchTrend />
+          <PipelineWmsKpi />
+          <div className="mt-6">
+            <AutoResearchTrend />
+          </div>
           <div className="mt-4">
             <AutoResearchLog />
           </div>
