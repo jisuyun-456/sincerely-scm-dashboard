@@ -8,6 +8,7 @@ type ToItem = {
   sc_id: string;
   shipment_date: string | null;
   status: string | null;
+  final_items: string | null;
 };
 
 type MultiToRow = {
@@ -68,11 +69,16 @@ function PnaRow({ row }: { row: MultiToRow }) {
       {open && (
         <ul className="px-6 pb-3 space-y-1">
           {row.to_list.map((to) => (
-            <li key={to.sc_id} className="flex items-center gap-2 text-xs">
-              <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${statusDot(to.status)}`} />
-              <span className="font-mono text-smoke">{to.sc_id}</span>
-              <span className="text-smoke tnum">{formatDate(to.shipment_date)}</span>
-              {to.status && <span className="text-smoke">{to.status}</span>}
+            <li key={to.sc_id} className="text-xs py-1">
+              <div className="flex items-center gap-2">
+                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${statusDot(to.status)}`} />
+                <span className="font-mono text-smoke">{to.sc_id}</span>
+                <span className="text-smoke tnum">{formatDate(to.shipment_date)}</span>
+                {to.status && <span className="text-smoke">{to.status}</span>}
+              </div>
+              {to.final_items && (
+                <p className="mt-0.5 ml-3.5 text-ink leading-snug">{to.final_items}</p>
+              )}
             </li>
           ))}
         </ul>

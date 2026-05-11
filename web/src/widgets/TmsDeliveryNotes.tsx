@@ -72,11 +72,16 @@ export function TmsDeliveryNotes() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
+      const today = new Date().toISOString().slice(0, 10);
+      const until = new Date();
+      until.setDate(until.getDate() + 14);
       const { data, error } = await supabase
         .from("tms_delivery_notes")
         .select("sc_id, pna_code, pna_name, shipment_date, delivery_notes, status")
-        .order("shipment_date", { ascending: false })
-        .limit(30);
+        .gte("shipment_date", today)
+        .lte("shipment_date", until.toISOString().slice(0, 10))
+        .order("shipment_date", { ascending: true })
+        .limit(100);
       if (cancelled) return;
       if (error) {
         console.error("TmsDeliveryNotes fetch error:", error);
@@ -103,7 +108,7 @@ export function TmsDeliveryNotes() {
     <Card>
       <SectionHeader
         title="배송 요청사항 특이건"
-        meta={loading ? "Loading" : data ? `최근 2주 · ${data.length}건` : "No data"}
+        meta={loading ? "Loading" : data ? `2주 이내 · ${data.length}건` : "No data"}
       />
       <div>
         {loading ? (

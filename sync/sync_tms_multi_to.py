@@ -29,6 +29,7 @@ FLD_PNA_CODE = "fldTs3FzaSdGYEiKX"
 FLD_PNA_NAME = "fldZel4trYQwP7EV5"
 FLD_STATUS = "fldOhibgxg6LIpRTi"
 FLD_SHIPMENT_DATE = "fldQvmEwwzvQW95h9"
+FLD_FINAL_ITEMS = "fldXXnGOXkm90snKn"  # 최종 출고 품목 및 수량 (formula)
 
 
 def _week_start() -> date:
@@ -52,7 +53,7 @@ def _supabase_upsert_headers(key: str) -> dict[str, str]:
 def _get_records(pat: str, filter_formula: str) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     offset: str | None = None
-    fields = [FLD_SC_ID, FLD_PNA_CODE, FLD_PNA_NAME, FLD_STATUS, FLD_SHIPMENT_DATE]
+    fields = [FLD_SC_ID, FLD_PNA_CODE, FLD_PNA_NAME, FLD_STATUS, FLD_SHIPMENT_DATE, FLD_FINAL_ITEMS]
     while True:
         params: dict[str, Any] = {
             "fields[]": fields,
@@ -168,6 +169,7 @@ def run() -> int:
                 "sc_id": sc_id,
                 "shipment_date": f.get(FLD_SHIPMENT_DATE),
                 "status": status,
+                "final_items": f.get(FLD_FINAL_ITEMS),
             })
 
         # Keep only PNAs with 2+ TOs
