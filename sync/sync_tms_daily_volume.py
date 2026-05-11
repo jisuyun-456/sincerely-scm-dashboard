@@ -1,7 +1,7 @@
 """
 sync_tms_daily_volume — daily shipment volume snapshot (last 30 days).
 
-Groups by 출하확정일: sent_count=total, delivered_count=배송완료, pending_count=rest.
+Groups by 출하확정일: sent_count=total, delivered_count=배송완료|출하완료, pending_count=rest.
 
 Airtable base: app4x70a8mOrIKsMf (TMS)
 PAT env var  : AIRTABLE_PAT_TMS
@@ -99,7 +99,7 @@ def run() -> int:
             status_raw = f.get(FLD_STATUS)
             status = status_raw.get("name") if isinstance(status_raw, dict) else status_raw
             sent[d] += 1
-            if status == "배송완료":
+            if status in ("배송완료", "출하완료"):
                 dlv[d] += 1
 
         rows = [{"date": d, "sent_count": total,

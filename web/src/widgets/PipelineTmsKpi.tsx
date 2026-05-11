@@ -11,6 +11,16 @@ import { usePipelineData } from "@/hooks/usePipelineData";
 
 const BOX_ORDER = ["극소", "중", "중대", "대", "특대"];
 
+function partnerSortKey(name: string): number {
+  if (name.includes("신시어리 기사님") || name.includes("신시어리 (박") || name.includes("신시어리 (조") || name.includes("신시어리 (이")) return 0;
+  if (name.includes("로젠")) return 1;
+  if (name.includes("다영")) return 2;
+  if (name.includes("베스트원")) return 3;
+  if (name.includes("고고엑스")) return 4;
+  if (name.includes("고객")) return 5;
+  return 9;
+}
+
 export function PipelineTmsKpi() {
   const { latest, loading, error } = usePipelineData(4);
 
@@ -155,7 +165,7 @@ export function PipelineTmsKpi() {
                 </tr>
               </thead>
               <tbody>
-                {partners.map((p) => (
+                {[...partners].sort((a, b) => partnerSortKey(a.name) - partnerSortKey(b.name)).map((p) => (
                   <tr key={p.name} className="border-b border-divider/30 last:border-0">
                     <td className="px-4 py-2 text-ink">{p.name}</td>
                     <td className="px-4 py-2 text-right text-ink">{p.cnt}</td>

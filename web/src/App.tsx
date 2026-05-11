@@ -141,7 +141,6 @@ function Header({
             <NavLink to="/wms" label="WMS" />
             <NavLink to="/vault" label="Vault" />
             <NavLink to="/log" label="Log" />
-            <NavLink to="/pipeline" label="Pipeline" />
           </nav>
         </div>
       </div>
