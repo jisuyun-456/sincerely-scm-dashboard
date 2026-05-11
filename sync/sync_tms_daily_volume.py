@@ -99,7 +99,7 @@ def run() -> int:
             status_raw = f.get(FLD_STATUS)
             status = status_raw.get("name") if isinstance(status_raw, dict) else status_raw
             sent[d] += 1
-            if status in ("배송완료", "출하완료"):
+            if status in ("배송완료", "출하 완료", "출하완료"):
                 dlv[d] += 1
 
         rows = [{"date": d, "sent_count": total,

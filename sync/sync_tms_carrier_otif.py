@@ -103,7 +103,7 @@ def run() -> int:
             for pid in f.get(FLD_PARTNER_LINKED) or []:
                 name = partner_map.get(pid, "기타")
                 totals[name] += 1
-                if status in ("배송완료", "출하완료"):
+                if status in ("배송완료", "출하 완료", "출하완료"):
                     delivered[name] += 1
 
         if not totals:
