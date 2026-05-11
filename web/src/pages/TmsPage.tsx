@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { PageTabs } from "@/components/ui/page-tabs";
 import { TmsExceptionBanner } from "@/widgets/TmsExceptionBanner";
 import { TmsDeliveryNotes } from "@/widgets/TmsDeliveryNotes";
 import { TmsMultiTo } from "@/widgets/TmsMultiTo";
@@ -6,26 +8,56 @@ import { TmsCarrierRanking } from "@/widgets/TmsCarrierRanking";
 import { TmsOtifTrend } from "@/widgets/TmsOtifTrend";
 import { TmsDailyVolume } from "@/widgets/TmsDailyVolume";
 import { TmsPodAging } from "@/widgets/TmsPodAging";
+import { TmsKpi } from "@/widgets/TmsKpi";
+
+const TABS = [
+  { key: "work", label: "업무처리" },
+  { key: "ops", label: "운영" },
+  { key: "analytics", label: "분석" },
+];
 
 export function TmsPage() {
+  const [tab, setTab] = useState("work");
+
   return (
     <>
-      <TmsExceptionBanner />
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <TmsDeliveryNotes />
-        <TmsMultiTo />
-      </div>
-      <div className="mt-4">
-        <TmsDayoungSchedule />
-      </div>
-      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-        <TmsCarrierRanking />
-        <TmsOtifTrend />
-      </div>
-      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-        <TmsDailyVolume />
-        <TmsPodAging />
-      </div>
+      <PageTabs tabs={TABS} active={tab} onChange={setTab} />
+
+      {tab === "work" && (
+        <>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <TmsDeliveryNotes />
+            <TmsMultiTo />
+          </div>
+          <div className="mt-4">
+            <TmsDayoungSchedule />
+          </div>
+        </>
+      )}
+
+      {tab === "ops" && (
+        <>
+          <TmsKpi />
+          <div className="mt-4">
+            <TmsExceptionBanner />
+          </div>
+          <div className="mt-4">
+            <TmsPodAging />
+          </div>
+        </>
+      )}
+
+      {tab === "analytics" && (
+        <>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <TmsOtifTrend />
+            <TmsCarrierRanking />
+          </div>
+          <div className="mt-4">
+            <TmsDailyVolume />
+          </div>
+        </>
+      )}
     </>
   );
 }
