@@ -27,6 +27,7 @@ FLD_PNA_NAME = "fldZel4trYQwP7EV5"       # project (lookup)
 FLD_NOTES = "fldHQdGWe8jNrNYEM"          # 배송 요청사항 (rollup)
 FLD_STATUS = "fldOhibgxg6LIpRTi"         # 발송상태_TMS (singleSelect)
 FLD_SHIPMENT_DATE = "fldQvmEwwzvQW95h9"  # 출하확정일 (date)
+FLD_MOVEMENT_PURPOSE = "fldB4tQYOyiYitu6c"  # 이동목적 rollup (from 배송요청)
 
 FILTER = (
     "AND("
@@ -53,7 +54,7 @@ def _supabase_upsert_headers(key: str) -> dict[str, str]:
 def _get_records(pat: str) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     offset: str | None = None
-    fields = [FLD_SC_ID, FLD_PNA_CODE, FLD_PNA_NAME, FLD_NOTES, FLD_STATUS, FLD_SHIPMENT_DATE]
+    fields = [FLD_SC_ID, FLD_PNA_CODE, FLD_PNA_NAME, FLD_NOTES, FLD_STATUS, FLD_SHIPMENT_DATE, FLD_MOVEMENT_PURPOSE]
     while True:
         params: dict[str, Any] = {
             "fields[]": fields,
@@ -142,6 +143,16 @@ def run() -> int:
             if not notes:
                 continue
 
+            purpose_raw = f.get(FLD_MOVEMENT_PURPOSE)
+            if isinstance(purpose_raw, list):
+                purposes = [str(x) for x in purpose_raw]
+            elif isinstance(purpose_raw, str):
+                purposes = [purpose_raw]
+            else:
+                purposes = []
+            if not any("고객납품" in p for p in purposes):
+                continue
+
             pna_name_raw = f.get(FLD_PNA_NAME)
             pna_name = None
             if isinstance(pna_name_raw, list) and pna_name_raw:
@@ -178,6 +189,14 @@ def run() -> int:
                 status="ok", rows_written=0,
             )
             return 0
+
+        # Remove past-date records so stale non-고객납품 entries don't linger
+        today_str = datetime.now(timezone.utc).date().isoformat()
+        requests.delete(
+            f"{supabase_url}/rest/v1/tms_delivery_notes?shipment_date=lt.{today_str}",
+            headers={"apikey": supabase_key, "Authorization": f"Bearer {supabase_key}"},
+            timeout=15,
+        ).raise_for_status()
 
         # Upsert in batches of 50
         batch_size = 50
