@@ -1,0 +1,117 @@
+<h2>세 가지 관점 — 어떻게 구현할까요?</h2>
+<p class="subtitle">TMS·WMS 각각 업무처리용 / 운영용 / 분석용을 어떻게 보여줄지</p>
+
+<div class="cards">
+
+  <!-- Option A1: In-page tabs -->
+  <div class="card" data-choice="a1" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f5f0eb;padding:16px;font-size:12px;">
+
+      <!-- Nav bar -->
+      <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Home</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Ops</span>
+        <span style="background:#c4a882;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;">TMS ◀ 현재</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">WMS</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Vault</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Log</span>
+      </div>
+
+      <!-- TMS page with sub-tabs -->
+      <div style="background:#fff;border:1px solid #e0d8cf;border-radius:6px;overflow:hidden;">
+        <div style="border-bottom:1px solid #e0d8cf;display:flex;gap:0;">
+          <div style="padding:8px 14px;font-size:11px;border-bottom:2px solid #c4a882;color:#c4a882;font-weight:600;">업무처리</div>
+          <div style="padding:8px 14px;font-size:11px;color:#999;">운영</div>
+          <div style="padding:8px 14px;font-size:11px;color:#999;">분석</div>
+        </div>
+        <div style="padding:10px;font-size:11px;color:#666;">
+          <div style="background:#f9f6f2;border-radius:3px;padding:6px;margin-bottom:4px;">📋 배송 요청사항 (DeliveryNotes)</div>
+          <div style="background:#f9f6f2;border-radius:3px;padding:6px;margin-bottom:4px;">🔀 멀티 TO건 (MultiTo)</div>
+          <div style="background:#f9f6f2;border-radius:3px;padding:6px;">📅 다영기획 임가공 예정</div>
+        </div>
+      </div>
+
+      <div style="margin-top:8px;font-size:10px;color:#999;text-align:center;">WMS도 동일한 3-탭 구조</div>
+    </div>
+    <div class="card-body">
+      <h3>A1 — 도메인 페이지 내 서브탭 (추천)</h3>
+      <p>TMS / WMS 각 페이지 상단에 [업무처리] [운영] [분석] 탭. 최상위 탭은 6개 유지.</p>
+      <div class="pros-cons" style="margin-top:8px;">
+        <div class="pros"><h4>장점</h4><ul><li>탭 수 증가 없음</li><li>도메인별 컨텍스트 유지</li><li>TMS 내에서 빠른 전환</li></ul></div>
+        <div class="cons"><h4>단점</h4><ul><li>서브탭 UI 구현 필요</li><li>초기 기본 탭 선택 로직 필요</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option A2: Scroll sections -->
+  <div class="card" data-choice="a2" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f5f0eb;padding:16px;font-size:12px;">
+
+      <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Home</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Ops</span>
+        <span style="background:#c4a882;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;">TMS ◀ 현재</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">WMS</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Vault</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Log</span>
+      </div>
+
+      <div style="background:#fff;border:1px solid #e0d8cf;border-radius:6px;padding:10px;font-size:11px;">
+        <div style="font-size:10px;color:#c4a882;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:6px;">— 업무처리</div>
+        <div style="background:#f9f6f2;border-radius:3px;padding:5px;margin-bottom:3px;color:#666;">📋 DeliveryNotes</div>
+        <div style="background:#f9f6f2;border-radius:3px;padding:5px;margin-bottom:3px;color:#666;">🔀 MultiTo</div>
+        <div style="background:#f9f6f2;border-radius:3px;padding:5px;margin-bottom:10px;color:#666;">📅 Dayoung</div>
+
+        <div style="font-size:10px;color:#c4a882;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:6px;">— 운영</div>
+        <div style="background:#fff3e0;border-radius:3px;padding:5px;margin-bottom:3px;color:#666;">⚠️ ExceptionBanner</div>
+        <div style="background:#fff3e0;border-radius:3px;padding:5px;margin-bottom:10px;color:#666;">📊 KPI 핵심지표</div>
+
+        <div style="font-size:10px;color:#c4a882;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:6px;">— 분석</div>
+        <div style="background:#f0f4ff;border-radius:3px;padding:5px;margin-bottom:3px;color:#666;">📈 OTIF Trend</div>
+        <div style="background:#f0f4ff;border-radius:3px;padding:5px;color:#666;">🤖 AutoResearch</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A2 — 페이지 내 섹션 구분 (스크롤)</h3>
+      <p>TMS / WMS 페이지를 세 섹션(업무처리 → 운영 → 분석)으로 수직 분할. 탭 없이 스크롤로 전환.</p>
+      <div class="pros-cons" style="margin-top:8px;">
+        <div class="pros"><h4>장점</h4><ul><li>탭 UI 없이 단순</li><li>전체 맥락 한 번에 볼 수 있음</li><li>개발 가장 쉬움</li></ul></div>
+        <div class="cons"><h4>단점</h4><ul><li>페이지 길이 길어짐</li><li>분석 섹션까지 스크롤 필요</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option A3: Separate top-level pages -->
+  <div class="card" data-choice="a3" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f5f0eb;padding:16px;font-size:12px;">
+
+      <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+        <span style="background:#e0d8cf;color:#555;padding:3px 6px;border-radius:4px;font-size:10px;">Home</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 6px;border-radius:4px;font-size:10px;">Ops</span>
+        <span style="background:#c4a882;color:#fff;padding:3px 6px;border-radius:4px;font-size:10px;">TMS·Work</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 6px;border-radius:4px;font-size:10px;">TMS·KPI</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 6px;border-radius:4px;font-size:10px;">WMS·Work</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 6px;border-radius:4px;font-size:10px;">WMS·KPI</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 6px;border-radius:4px;font-size:10px;">Vault</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 6px;border-radius:4px;font-size:10px;">Log</span>
+      </div>
+
+      <div style="font-size:11px;color:#999;background:#fff;border:1px solid #e0d8cf;border-radius:6px;padding:10px;">
+        <div style="color:#888;margin-bottom:4px;">최상위 탭 8개 → 네비게이션 혼잡</div>
+        <div style="color:#bbb;font-size:10px;">TMS·Work / TMS·KPI / WMS·Work / WMS·KPI</div>
+        <div style="color:#bbb;font-size:10px;margin-top:6px;">각 페이지는 단순하지만 탭이 너무 많아짐</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A3 — 최상위 탭 완전 분리 (비추천)</h3>
+      <p>각 관점을 독립 페이지로. 탭이 8개가 되어 네비게이션이 복잡해짐. 참고용으로만 제시.</p>
+      <div class="pros-cons" style="margin-top:8px;">
+        <div class="pros"><h4>장점</h4><ul><li>각 페이지 단순</li></ul></div>
+        <div class="cons"><h4>단점</h4><ul><li>탭 8개 — 너무 많음</li><li>도메인 컨텍스트 분산</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px;">💡 추천: <strong>A1 (서브탭)</strong> — 최상위 네비게이션을 6탭으로 유지하면서 TMS·WMS 내부에서 업무처리 / 운영 / 분석을 빠르게 전환 가능. 현장에서 많이 쓰는 패턴.</p>

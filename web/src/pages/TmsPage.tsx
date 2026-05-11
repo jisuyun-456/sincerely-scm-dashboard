@@ -9,6 +9,7 @@ import { TmsOtifTrend } from "@/widgets/TmsOtifTrend";
 import { TmsDailyVolume } from "@/widgets/TmsDailyVolume";
 import { TmsPodAging } from "@/widgets/TmsPodAging";
 import { TmsKpi } from "@/widgets/TmsKpi";
+import { WeeklyKpiSummary } from "@/widgets/WeeklyKpiSummary";
 
 const TABS = [
   { key: "work", label: "업무처리" },
@@ -38,6 +39,9 @@ export function TmsPage() {
       {tab === "ops" && (
         <>
           <TmsKpi />
+          <div className="mt-4">
+            <WeeklyKpiSummary domain="TMS" />
+          </div>
           <div className="mt-4">
             <TmsExceptionBanner />
           </div>

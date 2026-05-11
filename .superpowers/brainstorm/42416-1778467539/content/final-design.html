@@ -1,0 +1,109 @@
+<h2>최종 IA 설계 — 전체 구조</h2>
+<p class="subtitle">6탭 + TMS·WMS 서브탭 구조 확정안</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
+
+  <!-- Home -->
+  <div style="background:#fff;border:1px solid #e0d8cf;border-radius:8px;overflow:hidden;">
+    <div style="background:#c4a882;color:#fff;padding:8px 12px;font-size:12px;font-weight:600;">🏠 Home <span style="font-weight:400;font-size:10px;opacity:0.8;">/ (변경 최소)</span></div>
+    <div style="padding:10px;font-size:11px;color:#666;line-height:2;">
+      <div style="background:#f9f6f2;border-radius:3px;padding:5px 8px;margin-bottom:4px;">📋 Tasks·Open (col-span-2)</div>
+      <div style="background:#f9f6f2;border-radius:3px;padding:5px 8px;margin-bottom:4px;">📝 SimpleTodo</div>
+      <div style="border-top:1px dashed #e0d8cf;margin:6px 0;"></div>
+      <div style="color:#bbb;font-size:10px;">❌ TmsKpi → Ops로</div>
+      <div style="color:#bbb;font-size:10px;">❌ AutoResearch → WMS[분석]으로</div>
+      <div style="color:#bbb;font-size:10px;">❌ AgentFeed → Log로</div>
+      <div style="color:#bbb;font-size:10px;">❌ SyncHealth → Log로</div>
+    </div>
+  </div>
+
+  <!-- Ops -->
+  <div style="background:#fff;border:2px solid #c4a882;border-radius:8px;overflow:hidden;">
+    <div style="background:#c4a882;color:#fff;padding:8px 12px;font-size:12px;font-weight:600;">⚡ Ops <span style="font-weight:400;font-size:10px;opacity:0.8;">/ops (신규)</span></div>
+    <div style="padding:10px;font-size:11px;color:#666;line-height:2;">
+      <div style="font-size:10px;color:#c4a882;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">TMS 업무</div>
+      <div style="background:#fff3e0;border-radius:3px;padding:5px 8px;margin-bottom:3px;">⚠️ ExceptionBanner</div>
+      <div style="background:#f9f6f2;border-radius:3px;padding:5px 8px;margin-bottom:3px;">📋 DeliveryNotes</div>
+      <div style="background:#f9f6f2;border-radius:3px;padding:5px 8px;margin-bottom:3px;">🔀 MultiTo</div>
+      <div style="background:#f9f6f2;border-radius:3px;padding:5px 8px;margin-bottom:6px;">📅 Dayoung (2주)</div>
+      <div style="font-size:10px;color:#c4a882;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">WMS 업무 (추후)</div>
+      <div style="background:#f0f4f8;border-radius:3px;padding:5px 8px;color:#aaa;">WMS 예외건 (준비중)</div>
+    </div>
+  </div>
+
+  <!-- TMS -->
+  <div style="background:#fff;border:1px solid #e0d8cf;border-radius:8px;overflow:hidden;">
+    <div style="background:#c4a882;color:#fff;padding:8px 12px;font-size:12px;font-weight:600;">🚚 TMS <span style="font-weight:400;font-size:10px;opacity:0.8;">/tms (서브탭)</span></div>
+    <!-- sub-tabs -->
+    <div style="border-bottom:1px solid #e0d8cf;display:flex;">
+      <div style="padding:5px 10px;font-size:10px;border-bottom:2px solid #c4a882;color:#c4a882;font-weight:600;">업무처리</div>
+      <div style="padding:5px 10px;font-size:10px;color:#999;">운영</div>
+      <div style="padding:5px 10px;font-size:10px;color:#999;">분석</div>
+    </div>
+    <div style="padding:10px;font-size:11px;color:#666;line-height:1.9;">
+      <div style="background:#f9f6f2;border-radius:3px;padding:5px 8px;margin-bottom:3px;">📋 DeliveryNotes</div>
+      <div style="background:#f9f6f2;border-radius:3px;padding:5px 8px;margin-bottom:3px;">🔀 MultiTo</div>
+      <div style="background:#f9f6f2;border-radius:3px;padding:5px 8px;">📅 Dayoung</div>
+      <div style="border-top:1px dashed #e0d8cf;margin:6px 0;font-size:10px;color:#aaa;">[운영] TmsKpi + ExceptionBanner + PodAging</div>
+      <div style="font-size:10px;color:#aaa;">[분석] OTIF + Carrier + DailyVolume</div>
+    </div>
+  </div>
+
+  <!-- WMS -->
+  <div style="background:#fff;border:1px solid #e0d8cf;border-radius:8px;overflow:hidden;">
+    <div style="background:#c4a882;color:#fff;padding:8px 12px;font-size:12px;font-weight:600;">📦 WMS <span style="font-weight:400;font-size:10px;opacity:0.8;">/wms (서브탭)</span></div>
+    <div style="border-bottom:1px solid #e0d8cf;display:flex;">
+      <div style="padding:5px 10px;font-size:10px;border-bottom:2px solid #c4a882;color:#c4a882;font-weight:600;">업무처리</div>
+      <div style="padding:5px 10px;font-size:10px;color:#999;">운영</div>
+      <div style="padding:5px 10px;font-size:10px;color:#999;">분석</div>
+    </div>
+    <div style="padding:10px;font-size:11px;color:#aaa;line-height:1.9;">
+      <div style="background:#f5f5f5;border-radius:3px;padding:5px 8px;margin-bottom:3px;">[업무처리] 입출고 처리 (준비중)</div>
+      <div style="background:#f5f5f5;border-radius:3px;padding:5px 8px;margin-bottom:3px;">[운영] 재고 모니터링 (준비중)</div>
+      <div style="background:#f5f5f5;border-radius:3px;padding:5px 8px;">[분석] AutoResearchTrend + Log</div>
+    </div>
+  </div>
+
+  <!-- Log -->
+  <div style="background:#fff;border:1px solid #e0d8cf;border-radius:8px;overflow:hidden;">
+    <div style="background:#c4a882;color:#fff;padding:8px 12px;font-size:12px;font-weight:600;">📜 Log <span style="font-weight:400;font-size:10px;opacity:0.8;">/log (확장)</span></div>
+    <div style="padding:10px;font-size:11px;color:#666;line-height:1.9;">
+      <div style="background:#f9f6f2;border-radius:3px;padding:5px 8px;margin-bottom:3px;">ActivityTimeline</div>
+      <div style="background:#f9f6f2;border-radius:3px;padding:5px 8px;margin-bottom:3px;">SyncHistory</div>
+      <div style="background:#f9f6f2;border-radius:3px;padding:5px 8px;margin-bottom:3px;">ErrorLog</div>
+      <div style="border-top:1px dashed #e0d8cf;margin:6px 0;"></div>
+      <div style="background:#e8f5e9;border-radius:3px;padding:5px 8px;margin-bottom:3px;color:#555;">🤖 AgentFeed (이동)</div>
+      <div style="background:#e8f5e9;border-radius:3px;padding:5px 8px;color:#555;">🔄 SyncHealth (이동)</div>
+    </div>
+  </div>
+
+  <!-- Vault -->
+  <div style="background:#fff;border:1px solid #e0d8cf;border-radius:8px;overflow:hidden;">
+    <div style="background:#c4a882;color:#fff;padding:8px 12px;font-size:12px;font-weight:600;">🗄️ Vault <span style="font-weight:400;font-size:10px;opacity:0.8;">/vault (유지)</span></div>
+    <div style="padding:10px;font-size:11px;color:#666;line-height:1.9;">
+      <div style="background:#f9f6f2;border-radius:3px;padding:5px 8px;">VaultResearchTimeline</div>
+      <div style="margin-top:6px;font-size:10px;color:#aaa;">변경 없음</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="background:#f9f6f2;border:1px solid #e0d8cf;border-radius:8px;padding:16px;font-size:12px;">
+  <div style="font-weight:600;color:#c4a882;margin-bottom:8px;">구현 범위 요약</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;color:#666;line-height:1.8;">
+    <div>
+      <div style="font-size:10px;color:#999;text-transform:uppercase;margin-bottom:4px;">신규 개발</div>
+      <div>• OpsPage.tsx 신규</div>
+      <div>• TMS 서브탭 UI 추가</div>
+      <div>• WMS 서브탭 구조 설계</div>
+      <div>• 라우터 /ops 추가</div>
+    </div>
+    <div>
+      <div style="font-size:10px;color:#999;text-transform:uppercase;margin-bottom:4px;">이동/수정</div>
+      <div>• AgentFeed → LogPage</div>
+      <div>• SyncHealth → LogPage</div>
+      <div>• AutoResearch → WMS[분석]</div>
+      <div>• TmsKpi → Ops + TMS[운영]</div>
+    </div>
+  </div>
+</div>

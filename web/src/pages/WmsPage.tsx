@@ -2,6 +2,7 @@ import { useState } from "react";
 import { PageTabs } from "@/components/ui/page-tabs";
 import { AutoResearchTrend } from "@/widgets/AutoResearchTrend";
 import { AutoResearchLog } from "@/widgets/AutoResearchLog";
+import { WeeklyKpiSummary } from "@/widgets/WeeklyKpiSummary";
 
 const TABS = [
   { key: "work", label: "업무처리" },
@@ -23,9 +24,7 @@ export function WmsPage() {
       )}
 
       {tab === "ops" && (
-        <div className="flex items-center justify-center py-24 text-smoke text-sm">
-          WMS 운영 위젯 준비 중
-        </div>
+        <WeeklyKpiSummary domain="WMS" />
       )}
 
       {tab === "analytics" && (

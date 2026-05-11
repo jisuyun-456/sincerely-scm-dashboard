@@ -1,0 +1,56 @@
+<h2>TMS Morning Glance — What matters most?</h2>
+<p class="subtitle">Select all signals you'd want to see immediately when you open the dashboard</p>
+
+<div class="options" data-multiselect>
+
+  <div class="option" data-choice="otif_trend" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>OTIF Trend (Weekly)</h3>
+      <p>Is on-time delivery getting better or worse over the last 8 weeks? A sparkline showing OTIF % history — not just today's number.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="status_funnel" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Shipment Status Funnel</h3>
+      <p>How many shipments are in each stage right now? 픽업대기 → 배송중 → 배송완료 → POD 미수령. One number per stage.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="carrier_otif" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Carrier OTIF Ranking</h3>
+      <p>Which carrier is performing best/worst this week? Ranked list of 신시어리(로젠) / 신시어리(조이) / etc. with their individual OTIF %.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="exceptions" onclick="toggleSelect(this)">
+    <div class="letter">D</div>
+    <div class="content">
+      <h3>Exception Alerts</h3>
+      <p>Proactive flags: late shipments past SLA, missing PODs older than X days, carriers below threshold. Zero = all good.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="daily_volume" onclick="toggleSelect(this)">
+    <div class="letter">E</div>
+    <div class="content">
+      <h3>Daily Volume Trend</h3>
+      <p>How many shipments went out each day this week vs. last week? Bar chart comparing this week vs. last week volume.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="pod_aging" onclick="toggleSelect(this)">
+    <div class="letter">F</div>
+    <div class="content">
+      <h3>POD Aging</h3>
+      <p>Of the pending PODs, how long have they been waiting? Breakdown: 1–3일 / 4–7일 / 7일+ buckets. Identifies stuck shipments.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top: 1.5rem;">Multi-select — pick everything you'd want on the overview. Click to select, click again to deselect.</p>

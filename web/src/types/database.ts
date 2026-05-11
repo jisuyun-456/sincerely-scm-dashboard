@@ -135,6 +135,27 @@ export type Database = {
         };
         Update: Partial<Database["public"]["Tables"]["sync_runs"]["Insert"]>;
       };
+      calendar_events: {
+        Row: {
+          id: number;
+          event_date: string;
+          title: string;
+          event_type: string;
+          created_at: string;
+        };
+        Insert: {
+          event_date: string;
+          title: string;
+          event_type?: string;
+          created_at?: string;
+        };
+        Update: {
+          event_date?: string;
+          title?: string;
+          event_type?: string;
+          created_at?: string;
+        };
+      };
     };
   };
 };

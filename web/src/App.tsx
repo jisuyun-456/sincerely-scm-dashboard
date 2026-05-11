@@ -3,7 +3,6 @@ import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { StatusGlyph } from "@/components/ui/status-glyph";
 import { HomePage } from "@/pages/HomePage";
-import { OpsPage } from "@/pages/OpsPage";
 import { TmsPage } from "@/pages/TmsPage";
 import { WmsPage } from "@/pages/WmsPage";
 import { VaultPage } from "@/pages/VaultPage";
@@ -68,7 +67,6 @@ export default function App() {
       <main className="mx-auto max-w-[1280px] px-6 pb-16 pt-8 sm:px-8 lg:px-12">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/ops" element={<OpsPage />} />
           <Route path="/tms" element={<TmsPage />} />
           <Route path="/wms" element={<WmsPage />} />
           <Route path="/vault" element={<VaultPage />} />
@@ -137,7 +135,6 @@ function Header({
           <span className="text-divider">·</span>
           <nav className="flex items-center gap-3 text-xs">
             <NavLink to="/" label="Home" />
-            <NavLink to="/ops" label="Ops" />
             <NavLink to="/tms" label="TMS" />
             <NavLink to="/wms" label="WMS" />
             <NavLink to="/vault" label="Vault" />

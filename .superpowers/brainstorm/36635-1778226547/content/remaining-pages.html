@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WMS / Vault / Log + Nav</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F5F0E8; color: #0D0D0D; font-family: 'Inter','Helvetica Neue',Arial,sans-serif; font-size: 12px; padding: 24px; -webkit-font-smoothing: antialiased; }
+  h2 { font-family: 'Playfair Display',Georgia,serif; font-size: 20px; font-weight: 500; margin-bottom: 6px; }
+  .sub { font-size: 11px; color: #6B6560; margin-bottom: 24px; }
+  .section { margin-bottom: 32px; }
+  .section h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: #6B6560; font-weight: 600; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(217,210,200,0.7); }
+
+  /* Nav strip */
+  .nav-strip { display: flex; align-items: center; gap: 6px; background: #E8E0D0; border-radius: 10px; padding: 10px 16px; margin-bottom: 10px; font-size: 11px; }
+  .nav-strip .logo { color: #CC4125; font-size: 18px; margin-right: 8px; }
+  .nav-strip .brand { font-weight: 500; margin-right: 16px; color: #0D0D0D; }
+  .nav-item { padding: 3px 10px; border-radius: 5px; color: #6B6560; }
+  .nav-item.active { background: #CC4125; color: white; font-weight: 500; }
+
+  /* Page sketch */
+  .page-sketch { background: #E8E0D0; border-radius: 12px; padding: 16px; }
+  .page-sketch .page-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: #6B6560; margin-bottom: 10px; font-weight: 600; }
+  .sketch-row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .sketch-block { background: #F5F0E8; border-radius: 6px; padding: 8px 10px; font-size: 10px; color: #6B6560; line-height: 1.5; }
+  .sketch-block.full { flex: 1; }
+  .sketch-block.half { flex: 1; }
+  .sketch-block.third { flex: 1; }
+  .sketch-block .block-title { font-size: 9px; font-weight: 600; color: #0D0D0D; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+  .sketch-block.accent { border-left: 3px solid #CC4125; }
+  .sketch-block.green { border-left: 3px solid #5a7a5a; }
+  .sketch-block.smoke { border-left: 3px solid #6B6560; }
+
+  /* Data model */
+  .table-def { background: #E8E0D0; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+  .table-def h4 { font-size: 11px; font-weight: 600; color: #CC4125; font-family: monospace; margin-bottom: 8px; }
+  .col-row { display: flex; gap: 12px; padding: 4px 0; border-bottom: 1px solid rgba(217,210,200,0.5); font-size: 10px; font-family: monospace; }
+  .col-row:last-child { border-bottom: none; }
+  .col-name { color: #0D0D0D; font-weight: 500; width: 160px; flex-shrink: 0; }
+  .col-type { color: #a85928; width: 120px; flex-shrink: 0; }
+  .col-desc { color: #6B6560; }
+
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: 600; margin-left: 6px; }
+  .tag-new { background: #fde8e4; color: #CC4125; }
+  .tag-exists { background: #e8f5e9; color: #2e7d32; }
+</style>
+</head>
+<body>
+
+<h2>Remaining Design — WMS · Vault · Log + Nav + Data Model</h2>
+<p class="sub">High-level layouts for the other 3 pages, navigation wiring, and new Supabase tables</p>
+
+<!-- Navigation -->
+<div class="section">
+  <h3>Navigation — React Router v6</h3>
+  <div style="margin-bottom:8px;font-size:11px;color:#6B6560;">Header nav becomes real links. URL changes on click. Browser back button works.</div>
+  <div style="display:flex;flex-direction:column;gap:6px;">
+    <div class="nav-strip">
+      <span class="logo">❈</span><span class="brand">Sincerely SCM</span>
+      <span class="nav-item active">Home</span>
+      <span class="nav-item">TMS</span>
+      <span class="nav-item">WMS</span>
+      <span class="nav-item">Vault</span>
+      <span class="nav-item">Log</span>
+      <span style="margin-left:auto;font-size:10px;color:#6B6560;">← / routes</span>
+    </div>
+    <div class="nav-strip">
+      <span class="logo">❈</span><span class="brand">Sincerely SCM</span>
+      <span class="nav-item">Home</span>
+      <span class="nav-item active">TMS</span>
+      <span class="nav-item">WMS</span>
+      <span class="nav-item">Vault</span>
+      <span class="nav-item">Log</span>
+      <span style="margin-left:auto;font-size:10px;color:#6B6560;">← /tms routes</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;font-size:10px;color:#6B6560;">Install: <code style="background:#E8E0D0;padding:1px 5px;border-radius:3px;">npm install react-router-dom</code> · Routes defined in App.tsx · Existing widgets unchanged</div>
+</div>
+
+<!-- WMS Page -->
+<div class="section">
+  <h3>WMS Page — /wms</h3>
+  <div class="page-sketch">
+    <div class="page-label">📦 WMS · Warehouse Operations</div>
+    <div class="sketch-row">
+      <div class="sketch-block third green">
+        <div class="block-title">Completion %</div>
+        <div>99.1% · ▲ W18</div>
+      </div>
+      <div class="sketch-block third green">
+        <div class="block-title">Defect Rate</div>
+        <div>0.8% · ▼ trend</div>
+      </div>
+      <div class="sketch-block third green">
+        <div class="block-title">Inbound Today</div>
+        <div>142 GR · 3 pending</div>
+      </div>
+    </div>
+    <div class="sketch-row">
+      <div class="sketch-block full green">
+        <div class="block-title">WMS KPI Trend (moved from Home)</div>
+        <div>Completion % + Defect % 8-week chart — same AutoResearchTrend widget, WMS domain only</div>
+      </div>
+    </div>
+    <div class="sketch-row">
+      <div class="sketch-block half green">
+        <div class="block-title">Outbound Today</div>
+        <div>Wave completions · picks · SSCC issued</div>
+      </div>
+      <div class="sketch-block half green">
+        <div class="block-title">Stock Alerts</div>
+        <div>Negative inventory · reorder flags (ROP)</div>
+      </div>
+    </div>
+    <div style="margin-top:6px;font-size:9px;color:#6B6560;">⚠ KPI tiles + trend: existing data. Outbound/stock: needs new WMS sync job (future session)</div>
+  </div>
+</div>
+
+<!-- Vault Page -->
+<div class="section">
+  <h3>Vault Page — /vault</h3>
+  <div class="page-sketch">
+    <div class="page-label">📓 Vault · AutoResearch Knowledge Base</div>
+    <div class="sketch-row">
+      <div class="sketch-block full smoke">
+        <div class="block-title">Research Timeline (expanded AutoResearchLog)</div>
+        <div>All domains: WEEKLY_TMS · WEEKLY_WMS · DEV · INFRA — no limit (current widget shows last 8 only) · filter by domain · link to Obsidian output files</div>
+      </div>
+    </div>
+    <div class="sketch-row">
+      <div class="sketch-block half smoke">
+        <div class="block-title">Output Files</div>
+        <div>Direct links to Obsidian outputs/ folder · grouped by month</div>
+      </div>
+      <div class="sketch-block half smoke">
+        <div class="block-title">Recent Decisions</div>
+        <div>Links to SCM/Decisions/ vault notes</div>
+      </div>
+    </div>
+    <div style="margin-top:6px;font-size:9px;color:#6B6560;">✅ autoresearch_log table already has all this data — mostly presentation work</div>
+  </div>
+</div>
+
+<!-- Log Page -->
+<div class="section">
+  <h3>Log Page — /log</h3>
+  <div class="page-sketch">
+    <div class="page-label">📋 Log · Full Audit Trail</div>
+    <div class="sketch-row">
+      <div class="sketch-block full smoke">
+        <div class="block-title">Unified Activity Timeline</div>
+        <div>Ops Activity feed (current widget) but no limit — all agent_events + sync_runs, date-filtered, searchable</div>
+      </div>
+    </div>
+    <div class="sketch-row">
+      <div class="sketch-block half smoke">
+        <div class="block-title">Sync Run History</div>
+        <div>All sync_runs · per-job filter · rows written · error messages</div>
+      </div>
+      <div class="sketch-block half smoke">
+        <div class="block-title">Error Log</div>
+        <div>Failed jobs only · error_message field · GitHub Actions run link</div>
+      </div>
+    </div>
+    <div style="margin-top:6px;font-size:9px;color:#6B6560;">✅ All data available now in sync_runs + agent_events — no new sync jobs needed</div>
+  </div>
+</div>
+
+<!-- Data Model -->
+<div class="section">
+  <h3>New Supabase Tables — 3 new sync jobs for TMS</h3>
+
+  <div class="table-def">
+    <h4>tms_carrier_otif <span class="tag tag-new">NEW</span></h4>
+    <div style="font-size:10px;color:#6B6560;margin-bottom:8px;">Per-carrier OTIF %, updated daily. Powers the Carrier OTIF Ranking widget.</div>
+    <div class="col-row"><span class="col-name">snapshot_date</span><span class="col-type">DATE</span><span class="col-desc">PK part · daily snapshot</span></div>
+    <div class="col-row"><span class="col-name">partner_name</span><span class="col-type">TEXT</span><span class="col-desc">PK part · e.g. "신시어리 (로젠)"</span></div>
+    <div class="col-row"><span class="col-name">total_shipments</span><span class="col-type">INT</span><span class="col-desc">shipments for this carrier today</span></div>
+    <div class="col-row"><span class="col-name">on_time_count</span><span class="col-type">INT</span><span class="col-desc">on-time deliveries (from OTIF table)</span></div>
+    <div class="col-row"><span class="col-name">otif_pct</span><span class="col-type">NUMERIC(5,2)</span><span class="col-desc">on_time_count / total * 100</span></div>
+  </div>
+
+  <div class="table-def">
+    <h4>tms_daily_volume <span class="tag tag-new">NEW</span></h4>
+    <div style="font-size:10px;color:#6B6560;margin-bottom:8px;">How many shipments were sent / delivered each day. Powers Daily Volume bar chart.</div>
+    <div class="col-row"><span class="col-name">date</span><span class="col-type">DATE PRIMARY KEY</span><span class="col-desc">shipment date (발송일 or 처리일)</span></div>
+    <div class="col-row"><span class="col-name">sent_count</span><span class="col-type">INT</span><span class="col-desc">shipments created on this date</span></div>
+    <div class="col-row"><span class="col-name">delivered_count</span><span class="col-type">INT</span><span class="col-desc">배송완료 confirmed on this date</span></div>
+    <div class="col-row"><span class="col-name">pending_count</span><span class="col-type">INT</span><span class="col-desc">still active as of this date</span></div>
+  </div>
+
+  <div class="table-def">
+    <h4>tms_pod_aging <span class="tag tag-new">NEW</span></h4>
+    <div style="font-size:10px;color:#6B6560;margin-bottom:8px;">POD status per shipment. Powers POD Aging buckets + exception alerts.</div>
+    <div class="col-row"><span class="col-name">snapshot_date</span><span class="col-type">DATE</span><span class="col-desc">PK part · daily snapshot</span></div>
+    <div class="col-row"><span class="col-name">shipment_id</span><span class="col-type">TEXT</span><span class="col-desc">PK part · Airtable record ID</span></div>
+    <div class="col-row"><span class="col-name">tracking_no</span><span class="col-type">TEXT</span><span class="col-desc">운송장번호</span></div>
+    <div class="col-row"><span class="col-name">delivered_date</span><span class="col-type">DATE</span><span class="col-desc">배송완료 date</span></div>
+    <div class="col-row"><span class="col-name">pod_confirmed</span><span class="col-type">BOOLEAN</span><span class="col-desc">POD received?</span></div>
+    <div class="col-row"><span class="col-name">days_pending</span><span class="col-type">INT</span><span class="col-desc">today - delivered_date, null if confirmed</span></div>
+    <div class="col-row"><span class="col-name">partner_name</span><span class="col-type">TEXT</span><span class="col-desc">carrier for the exception badge</span></div>
+  </div>
+</div>
+
+</body>
+</html>

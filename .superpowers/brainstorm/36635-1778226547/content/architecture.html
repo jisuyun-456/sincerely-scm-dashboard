@@ -1,0 +1,69 @@
+<h2>How should all this TMS data fit in?</h2>
+<p class="subtitle">Three structural approaches — pick the one that feels right</p>
+
+<div class="options">
+
+  <div class="option" data-choice="multipage" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Multi-page — activate the nav</h3>
+      <p>The existing <strong>Vault · TMS · WMS · Log</strong> header items become real page links. Home = current overview. TMS page = full TMS deep-dive (OTIF trend, carrier ranking, exceptions, volume, POD aging). WMS page = WMS-focused view.</p>
+      <div style="margin-top:0.75rem; background:#f5f0e8; border:1px solid #d9d2c8; border-radius:8px; padding:0.75rem; font-size:0.75rem; font-family:monospace;">
+        <div style="color:#6b6560;">Header nav:</div>
+        <div style="margin-top:0.25rem;">
+          <span style="background:#cc4125;color:white;padding:2px 8px;border-radius:4px;margin-right:4px;">Home</span>
+          <span style="padding:2px 8px;border:1px solid #d9d2c8;border-radius:4px;margin-right:4px;">TMS →</span>
+          <span style="padding:2px 8px;border:1px solid #d9d2c8;border-radius:4px;margin-right:4px;">WMS →</span>
+          <span style="padding:2px 8px;border:1px solid #d9d2c8;border-radius:4px;">Log →</span>
+        </div>
+        <div style="margin-top:0.5rem;color:#6b6560;">TMS page gets its own full layout: OTIF sparkline hero + carrier table + exception banner + volume bar chart + POD aging</div>
+      </div>
+      <div style="margin-top:0.5rem;font-size:0.75rem;color:#6b6560;">✦ Clean separation · TMS gets full real estate · Requires React Router (small dep)</div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="expandable" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Expandable TMS card — slide-in panel</h3>
+      <p>Current "TMS · Active" tile gets a <strong>→ expand</strong> button. Click it and a right-side drawer slides in over the page — showing OTIF trend, carrier ranking, exceptions, volume, POD aging. Overview stays visible on the left.</p>
+      <div style="margin-top:0.75rem; background:#f5f0e8; border:1px solid #d9d2c8; border-radius:8px; padding:0.75rem; font-size:0.75rem; font-family:monospace; display:flex; gap:0.5rem;">
+        <div style="flex:1; border:1px solid #d9d2c8; border-radius:6px; padding:0.5rem; opacity:0.5;">
+          <div style="font-size:0.65rem;color:#6b6560;">Overview (dimmed)</div>
+          <div style="margin-top:0.25rem;font-size:0.7rem;">TMS KPI · Tasks · Sync</div>
+          <div style="margin-top:0.25rem;font-size:0.7rem;">Trend · Ops Activity</div>
+        </div>
+        <div style="flex:1.4; border:2px solid #cc4125; border-radius:6px; padding:0.5rem; background:white;">
+          <div style="font-size:0.65rem;color:#cc4125;">TMS Deep Dive ✕</div>
+          <div style="margin-top:0.25rem;font-size:0.7rem;">OTIF 8w sparkline</div>
+          <div style="font-size:0.7rem;">Carrier ranking</div>
+          <div style="font-size:0.7rem;">⚠ 3 exceptions</div>
+          <div style="font-size:0.7rem;">Volume this/last week</div>
+          <div style="font-size:0.7rem;">POD aging buckets</div>
+        </div>
+      </div>
+      <div style="margin-top:0.5rem;font-size:0.75rem;color:#6b6560;">✦ No routing needed · Context stays · Slightly cramped on small screens</div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="sectioned" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Single page, sectioned — TMS block below overview</h3>
+      <p>Keep the current 3+1+2 overview grid. Below it, add a <strong>TMS Operations</strong> section with its own sub-grid: exception banner full-width, then OTIF trend + carrier ranking side-by-side, then volume + POD aging. One long scrollable page.</p>
+      <div style="margin-top:0.75rem; background:#f5f0e8; border:1px solid #d9d2c8; border-radius:8px; padding:0.75rem; font-size:0.75rem; font-family:monospace;">
+        <div style="color:#6b6560; margin-bottom:0.25rem;">Page structure (top → bottom):</div>
+        <div style="font-size:0.7rem;">── Overview: TmsKpi · Tasks · SyncHealth</div>
+        <div style="font-size:0.7rem;">── AutoResearch Trend (full width)</div>
+        <div style="font-size:0.7rem;">── Ops Activity · AutoResearch Log</div>
+        <div style="height:1px;background:#cc4125;margin:0.4rem 0;"></div>
+        <div style="font-size:0.7rem;color:#cc4125;">── TMS Operations ──────────────────</div>
+        <div style="font-size:0.7rem;">   ⚠ Exception Banner (full width)</div>
+        <div style="font-size:0.7rem;">   OTIF Trend · Carrier Ranking</div>
+        <div style="font-size:0.7rem;">   Volume Chart · POD Aging</div>
+      </div>
+      <div style="margin-top:0.5rem;font-size:0.75rem;color:#6b6560;">✦ Zero new infra · Simplest to build · Morning glance requires scrolling past overview</div>
+    </div>
+  </div>
+
+</div>

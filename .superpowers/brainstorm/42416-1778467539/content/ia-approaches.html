@@ -1,0 +1,154 @@
+<h2>Dashboard IA — 어떤 구조로 나눌까요?</h2>
+<p class="subtitle">3가지 정보 구조(IA) 접근법 비교 — 하나를 선택하거나 의견을 남겨주세요</p>
+
+<div class="cards">
+
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f5f0eb;padding:16px;font-family:monospace;font-size:12px;line-height:1.8;">
+      <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+        <span style="background:#c4a882;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;">Home</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Ops ✦ 신규</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">TMS</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">WMS</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Vault</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Log</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
+        <div style="background:#fff;border:1px solid #e0d8cf;border-radius:4px;padding:8px;">
+          <div style="font-weight:bold;color:#c4a882;margin-bottom:4px;">🏠 Home</div>
+          <div style="color:#666;">Tasks·Open</div>
+          <div style="color:#666;">메모 (SimpleTodo)</div>
+        </div>
+        <div style="background:#fff;border:1px solid #e0d8cf;border-radius:4px;padding:8px;">
+          <div style="font-weight:bold;color:#c4a882;margin-bottom:4px;">⚡ Ops</div>
+          <div style="color:#666;">배송 특이건</div>
+          <div style="color:#666;">멀티 TO건</div>
+          <div style="color:#666;">다영기획 예정</div>
+          <div style="color:#666;">Exception Banner</div>
+        </div>
+        <div style="background:#fff;border:1px solid #e0d8cf;border-radius:4px;padding:8px;">
+          <div style="font-weight:bold;color:#c4a882;margin-bottom:4px;">🚚 TMS</div>
+          <div style="color:#666;">KPI + OTIF Trend</div>
+          <div style="color:#666;">Carrier Ranking</div>
+          <div style="color:#666;">AutoResearch</div>
+        </div>
+        <div style="background:#fff;border:1px solid #e0d8cf;border-radius:4px;padding:8px;">
+          <div style="font-weight:bold;color:#c4a882;margin-bottom:4px;">📦 WMS</div>
+          <div style="color:#666;">KPI + 재고현황</div>
+          <div style="color:#666;">AutoResearch</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Ops 탭 신규 추가 (6탭)</h3>
+      <p>Home = 프로젝트 워크스페이스, Ops = 일일 운영 체크리스트. MECE하게 목적별 완전 분리.</p>
+      <div class="pros-cons" style="margin-top:8px;">
+        <div class="pros"><h4>장점</h4><ul><li>목적별 완전 분리</li><li>Ops는 매일 아침 첫 탭</li><li>물류 현장 표준에 가까움</li></ul></div>
+        <div class="cons"><h4>단점</h4><ul><li>탭 6개로 넓어짐</li><li>신규 개발 필요</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f5f0eb;padding:16px;font-family:monospace;font-size:12px;line-height:1.8;">
+      <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+        <span style="background:#c4a882;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;">Home</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">TMS</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">WMS</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Vault</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Log</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
+        <div style="background:#fff;border:1px solid #e0d8cf;border-radius:4px;padding:8px;grid-column:1/-1;">
+          <div style="font-weight:bold;color:#c4a882;margin-bottom:4px;">🏠 Home — 두 Zone</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+            <div style="background:#f9f6f2;border-radius:3px;padding:6px;">
+              <div style="font-size:10px;color:#999;text-transform:uppercase;margin-bottom:2px;">Zone 1 · Project</div>
+              <div style="color:#666;">Tasks·Open</div>
+              <div style="color:#666;">SimpleTodo</div>
+            </div>
+            <div style="background:#fff3e0;border-radius:3px;padding:6px;">
+              <div style="font-size:10px;color:#e07b00;text-transform:uppercase;margin-bottom:2px;">Zone 2 · 오늘 할 일</div>
+              <div style="color:#666;">Exception Banner</div>
+              <div style="color:#666;">배송 특이건 요약</div>
+              <div style="color:#666;">다영기획 Today</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid #e0d8cf;border-radius:4px;padding:8px;">
+          <div style="font-weight:bold;color:#c4a882;margin-bottom:4px;">🚚 TMS</div>
+          <div style="color:#666;">DeliveryNotes + MultiTo</div>
+          <div style="color:#666;">DayoungSchedule (2주)</div>
+          <div style="color:#666;">KPI + OTIF + Carrier</div>
+          <div style="color:#666;">AutoResearch</div>
+        </div>
+        <div style="background:#fff;border:1px solid #e0d8cf;border-radius:4px;padding:8px;">
+          <div style="font-weight:bold;color:#c4a882;margin-bottom:4px;">📦 WMS</div>
+          <div style="color:#666;">재고 현황 + KPI</div>
+          <div style="color:#666;">AutoResearch</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Home 2-Zone, 탭 유지 (5탭)</h3>
+      <p>Home을 Zone 1(Project) + Zone 2(오늘 Ops 요약)으로 분할. TMS에 상세 체크리스트 + 분석 통합.</p>
+      <div class="pros-cons" style="margin-top:8px;">
+        <div class="pros"><h4>장점</h4><ul><li>탭 추가 없음</li><li>Home에서 핵심만 한눈에</li><li>가장 적은 개발량</li></ul></div>
+        <div class="cons"><h4>단점</h4><ul><li>TMS 페이지 길어짐</li><li>Home Zone 경계 UI 설계 필요</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f5f0eb;padding:16px;font-family:monospace;font-size:12px;line-height:1.8;">
+      <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+        <span style="background:#c4a882;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;">Work ✦ 개명</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Ops ✦ 신규 (= Home)</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">TMS</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">WMS</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Vault</span>
+        <span style="background:#e0d8cf;color:#555;padding:3px 8px;border-radius:4px;font-size:11px;">Log</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
+        <div style="background:#fff;border:1px solid #e0d8cf;border-radius:4px;padding:8px;">
+          <div style="font-weight:bold;color:#c4a882;margin-bottom:4px;">💼 Work (= 현 Home)</div>
+          <div style="color:#666;">Tasks·Open</div>
+          <div style="color:#666;">SimpleTodo</div>
+          <div style="color:#999;font-size:10px;margin-top:4px;">AgentFeed → Log로 이동</div>
+          <div style="color:#999;font-size:10px;">SyncHealth → Log로 이동</div>
+        </div>
+        <div style="background:#fff;border:1px solid #e0d8cf;border-radius:4px;padding:8px;">
+          <div style="font-weight:bold;color:#c4a882;margin-bottom:4px;">⚡ Ops (첫 탭, 기본)</div>
+          <div style="color:#666;">Exception Banner</div>
+          <div style="color:#666;">배송 특이건</div>
+          <div style="color:#666;">멀티 TO건</div>
+          <div style="color:#666;">다영기획 예정</div>
+        </div>
+        <div style="background:#fff;border:1px solid #e0d8cf;border-radius:4px;padding:8px;">
+          <div style="font-weight:bold;color:#c4a882;margin-bottom:4px;">🚚 TMS</div>
+          <div style="color:#666;">KPI + OTIF + Carrier</div>
+          <div style="color:#666;">AutoResearch (TMS)</div>
+        </div>
+        <div style="background:#fff;border:1px solid #e0d8cf;border-radius:4px;padding:8px;">
+          <div style="font-weight:bold;color:#c4a882;margin-bottom:4px;">📦 WMS</div>
+          <div style="color:#666;">KPI + 재고현황</div>
+          <div style="color:#666;">AutoResearch (WMS)</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Ops를 첫 탭으로 (6탭, 업무 우선 순서)</h3>
+      <p>Ops = 매일 아침 첫 화면. Work = 프로젝트 관리. TMS/WMS = 순수 KPI·분석. "Exception-first" 물류 현장 철학.</p>
+      <div class="pros-cons" style="margin-top:8px;">
+        <div class="pros"><h4>장점</h4><ul><li>운영 예외 처리 최우선</li><li>TMS가 깔끔해짐 (분석만)</li><li>가장 MECE한 구조</li></ul></div>
+        <div class="cons"><h4>단점</h4><ul><li>Home 개념이 사라짐</li><li>가장 많은 재구성</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px;">💡 개인적 추천: <strong>A 또는 C</strong> — 물류 현장에서 "Exception-first" 대시보드가 표준. 탭 하나 추가는 작은 비용으로 MECE 분리를 얻는 가장 나은 트레이드오프입니다.</p>

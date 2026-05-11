@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMS Page Design — Sincerely SCM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #F5F0E8;
+    color: #0D0D0D;
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap');
+
+  /* Header */
+  .header {
+    background: #F5F0E8;
+    border-bottom: 1px solid rgba(217,210,200,0.7);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-left { display: flex; align-items: baseline; gap: 10px; }
+  .logo { font-size: 22px; color: #CC4125; animation: spin 12s linear infinite; display: inline-block; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .brand { font-family: 'Playfair Display', Georgia, serif; font-size: 18px; font-weight: 500; color: #0D0D0D; }
+  .brand-sub { font-size: 11px; color: #6B6560; }
+  .nav { display: flex; align-items: center; gap: 20px; font-size: 11px; }
+  .nav a { color: #6B6560; text-decoration: none; padding: 4px 8px; border-radius: 5px; }
+  .nav a:hover { color: #0D0D0D; }
+  .nav a.active { background: #CC4125; color: white; font-weight: 500; }
+
+  /* Page */
+  .page { max-width: 1280px; margin: 0 auto; padding: 24px 24px 48px; }
+  .page-title { display: flex; align-items: baseline; gap: 10px; margin-bottom: 20px; }
+  .page-title h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; font-weight: 500; color: #0D0D0D; }
+  .page-title span { font-size: 11px; color: #6B6560; }
+
+  /* Card */
+  .card {
+    background: #E8E0D0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(217,210,200,0.7);
+  }
+  .card-title { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: #0D0D0D; }
+  .card-meta { font-size: 10px; color: #6B6560; }
+  .card-body { padding: 14px 18px; }
+
+  /* Exception Banner */
+  .exception-banner {
+    background: #E8E0D0;
+    border-radius: 12px;
+    border-left: 4px solid #CC4125;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  .exception-ok {
+    border-left-color: #2e7d32;
+  }
+  .exc-icon { font-size: 16px; }
+  .exc-text h3 { font-size: 12px; font-weight: 600; color: #CC4125; margin-bottom: 3px; }
+  .exc-ok h3 { color: #2e7d32; }
+  .exc-text p { font-size: 11px; color: #6B6560; }
+  .exc-badges { display: flex; gap: 8px; margin-left: auto; }
+  .badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .badge-red { background: #fde8e4; color: #CC4125; }
+  .badge-amber { background: #fef3e2; color: #a85928; }
+  .badge-ok { background: #e8f5e9; color: #2e7d32; }
+
+  /* KPI row */
+  .kpi-row {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .kpi-tile {
+    flex: 1;
+    background: #E8E0D0;
+    border-radius: 12px;
+    padding: 14px 18px;
+  }
+  .kpi-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.07em; color: #6B6560; margin-bottom: 4px; }
+  .kpi-value { font-family: 'Playfair Display', Georgia, serif; font-size: 32px; font-weight: 500; line-height: 1; color: #0D0D0D; font-variant-numeric: tabular-nums; }
+  .kpi-delta { font-size: 10px; margin-top: 3px; font-variant-numeric: tabular-nums; font-family: monospace; }
+  .kpi-delta.up { color: #2e7d32; }
+  .kpi-delta.down { color: #CC4125; }
+
+  /* Grid */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+
+  /* Sparkline placeholder */
+  .sparkline-area {
+    height: 80px;
+    position: relative;
+    margin-top: 8px;
+  }
+  .sparkline-area svg { width: 100%; height: 100%; }
+
+  /* Bar chart */
+  .bar-group { display: flex; align-items: flex-end; gap: 4px; height: 80px; margin-top: 8px; }
+  .bar-pair { display: flex; gap: 2px; align-items: flex-end; flex: 1; }
+  .bar { border-radius: 2px 2px 0 0; min-width: 6px; }
+  .bar-this { background: #CC4125; }
+  .bar-last { background: #D9D2C8; }
+  .bar-labels { display: flex; justify-content: space-around; margin-top: 4px; }
+  .bar-label { font-size: 9px; color: #6B6560; text-align: center; flex: 1; }
+
+  /* Carrier table */
+  .carrier-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(217,210,200,0.4);
+  }
+  .carrier-row:last-child { border-bottom: none; }
+  .carrier-name { font-size: 11px; color: #0D0D0D; }
+  .carrier-count { font-size: 10px; color: #6B6560; font-variant-numeric: tabular-nums; font-family: monospace; }
+  .carrier-pct { font-size: 11px; font-weight: 500; font-family: monospace; font-variant-numeric: tabular-nums; }
+  .carrier-pct.good { color: #2e7d32; }
+  .carrier-pct.warn { color: #a85928; }
+  .carrier-pct.bad { color: #CC4125; }
+  .carrier-bar-wrap { width: 60px; height: 4px; background: #D9D2C8; border-radius: 2px; overflow: hidden; }
+  .carrier-bar-fill { height: 100%; border-radius: 2px; background: #CC4125; }
+
+  /* POD aging */
+  .pod-bucket {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(217,210,200,0.4);
+  }
+  .pod-bucket:last-child { border-bottom: none; }
+  .pod-range { font-size: 11px; color: #6B6560; width: 50px; }
+  .pod-bar-wrap { flex: 1; height: 6px; background: #D9D2C8; border-radius: 3px; overflow: hidden; }
+  .pod-bar-fill { height: 100%; border-radius: 3px; }
+  .pod-fill-1 { background: #a8c5a8; }
+  .pod-fill-2 { background: #e8a87c; }
+  .pod-fill-3 { background: #CC4125; }
+  .pod-count { font-size: 11px; font-weight: 500; font-family: monospace; color: #0D0D0D; width: 24px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0 14px;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6B6560;
+  }
+  .section-divider::after { content: ''; flex: 1; height: 1px; background: rgba(217,210,200,0.7); }
+
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+  .dot-ok { background: #2e7d32; }
+  .dot-warn { background: #CC4125; }
+
+  .legend { display: flex; gap: 14px; margin-top: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: #6B6560; }
+  .legend-swatch { width: 12px; height: 3px; border-radius: 1px; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <span class="logo">❈</span>
+    <span class="brand">Sincerely SCM</span>
+    <span class="brand-sub">Agentic OS</span>
+  </div>
+  <nav class="nav">
+    <a href="#">Home</a>
+    <a href="#" class="active">TMS</a>
+    <a href="#">WMS</a>
+    <a href="#">Vault</a>
+    <a href="#">Log</a>
+  </nav>
+</div>
+
+<!-- Page -->
+<div class="page">
+  <div class="page-title">
+    <h1>TMS · Operations</h1>
+    <span>Delivery performance — as of 8 May 2026</span>
+  </div>
+
+  <!-- Exception Banner (active state) -->
+  <div class="exception-banner">
+    <span class="exc-icon">⚠</span>
+    <div class="exc-text">
+      <h3>3 exceptions require attention</h3>
+      <p>2 shipments past delivery SLA · 1 POD overdue 8일</p>
+    </div>
+    <div class="exc-badges">
+      <span class="badge badge-red">2 Late</span>
+      <span class="badge badge-amber">1 POD 8일+</span>
+    </div>
+  </div>
+
+  <!-- KPI tiles row -->
+  <div class="kpi-row">
+    <div class="kpi-tile">
+      <div class="kpi-label">Active Shipments</div>
+      <div class="kpi-value">247</div>
+      <div class="kpi-delta up">▲ +12 vs yesterday</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">OTIF (this week)</div>
+      <div class="kpi-value">99</div>
+      <div class="kpi-delta up" style="font-family:Inter">▲ 99.2% · above 90% target</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">Pending POD</div>
+      <div class="kpi-value">16</div>
+      <div class="kpi-delta down">▼ 3 overdue 4일+</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">Delivered Today</div>
+      <div class="kpi-value">38</div>
+      <div class="kpi-delta up">▲ +5 vs last week avg</div>
+    </div>
+  </div>
+
+  <!-- 2x2 grid -->
+  <div class="grid-2">
+
+    <!-- OTIF Trend -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">OTIF Trend</span>
+        <span class="card-meta">8 weeks · weekly avg</span>
+      </div>
+      <div class="card-body">
+        <div class="sparkline-area">
+          <svg viewBox="0 0 320 80" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#CC4125" stop-opacity="0.15"/>
+                <stop offset="100%" stop-color="#CC4125" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <!-- Grid lines -->
+            <line x1="0" y1="20" x2="320" y2="20" stroke="#D9D2C8" stroke-width="0.5" stroke-dasharray="3,4"/>
+            <line x1="0" y1="40" x2="320" y2="40" stroke="#D9D2C8" stroke-width="0.5" stroke-dasharray="3,4"/>
+            <line x1="0" y1="60" x2="320" y2="60" stroke="#D9D2C8" stroke-width="0.5" stroke-dasharray="3,4"/>
+            <!-- 90% target line -->
+            <line x1="0" y1="28" x2="320" y2="28" stroke="#a85928" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.6"/>
+            <text x="4" y="26" font-size="7" fill="#a85928" opacity="0.8">90% target</text>
+            <!-- Area fill -->
+            <path d="M0,8 L40,6 L80,10 L120,4 L160,8 L200,5 L240,7 L280,4 L320,3 L320,80 L0,80 Z" fill="url(#g)"/>
+            <!-- Line -->
+            <path d="M0,8 L40,6 L80,10 L120,4 L160,8 L200,5 L240,7 L280,4 L320,3" fill="none" stroke="#CC4125" stroke-width="1.75"/>
+            <!-- Dots -->
+            <circle cx="0" cy="8" r="2.5" fill="#CC4125"/>
+            <circle cx="40" cy="6" r="2.5" fill="#CC4125"/>
+            <circle cx="80" cy="10" r="2.5" fill="#CC4125"/>
+            <circle cx="120" cy="4" r="2.5" fill="#CC4125"/>
+            <circle cx="160" cy="8" r="2.5" fill="#CC4125"/>
+            <circle cx="200" cy="5" r="2.5" fill="#CC4125"/>
+            <circle cx="240" cy="7" r="2.5" fill="#CC4125"/>
+            <circle cx="280" cy="4" r="2.5" fill="#CC4125"/>
+            <circle cx="320" cy="3" r="3.5" fill="#CC4125"/>
+            <!-- X labels -->
+            <text x="0" y="78" font-size="8" fill="#6B6560">W11</text>
+            <text x="38" y="78" font-size="8" fill="#6B6560">W12</text>
+            <text x="78" y="78" font-size="8" fill="#6B6560">W13</text>
+            <text x="118" y="78" font-size="8" fill="#6B6560">W14</text>
+            <text x="158" y="78" font-size="8" fill="#6B6560">W15</text>
+            <text x="198" y="78" font-size="8" fill="#6B6560">W16</text>
+            <text x="238" y="78" font-size="8" fill="#6B6560">W17</text>
+            <text x="278" y="78" font-size="8" fill="#6B6560">W18</text>
+          </svg>
+        </div>
+        <div style="margin-top:8px;font-size:10px;color:#6B6560;">Consistently above 90% target since W11 · W18: <strong style="color:#0D0D0D;">99.2%</strong></div>
+      </div>
+    </div>
+
+    <!-- Carrier OTIF Ranking -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Carrier OTIF Ranking</span>
+        <span class="card-meta">This week · by on-time rate</span>
+      </div>
+      <div class="card-body">
+        <div class="carrier-row" style="border-bottom:1px solid rgba(217,210,200,0.6);padding-bottom:5px;margin-bottom:5px;">
+          <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.05em;color:#6B6560;">Carrier</span>
+          <span style="font-size:9px;color:#6B6560;">Shipments</span>
+          <span style="font-size:9px;color:#6B6560;">OTIF %</span>
+          <span style="font-size:9px;color:#6B6560;width:60px;"></span>
+        </div>
+        <div class="carrier-row">
+          <span class="carrier-name">신시어리 (로젠)</span>
+          <span class="carrier-count">3268</span>
+          <span class="carrier-pct good">99.8%</span>
+          <div class="carrier-bar-wrap"><div class="carrier-bar-fill" style="width:100%"></div></div>
+        </div>
+        <div class="carrier-row">
+          <span class="carrier-name">신시어리 (조이)</span>
+          <span class="carrier-count">2923</span>
+          <span class="carrier-pct good">99.1%</span>
+          <div class="carrier-bar-wrap"><div class="carrier-bar-fill" style="width:99%"></div></div>
+        </div>
+        <div class="carrier-row">
+          <span class="carrier-name">신시어리 (고려)</span>
+          <span class="carrier-count">1951</span>
+          <span class="carrier-pct warn">97.4%</span>
+          <div class="carrier-bar-wrap"><div class="carrier-bar-fill" style="width:97%;background:#a85928"></div></div>
+        </div>
+        <div class="carrier-row">
+          <span class="carrier-name">신시어리 (이편한)</span>
+          <span class="carrier-count">1787</span>
+          <span class="carrier-pct good">99.6%</span>
+          <div class="carrier-bar-wrap"><div class="carrier-bar-fill" style="width:99.6%"></div></div>
+        </div>
+        <div class="carrier-row">
+          <span class="carrier-name">기타</span>
+          <span class="carrier-count">6949</span>
+          <span class="carrier-pct good">99.3%</span>
+          <div class="carrier-bar-wrap"><div class="carrier-bar-fill" style="width:99.3%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daily Volume -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Daily Volume</span>
+        <span class="card-meta">This week vs last week</span>
+      </div>
+      <div class="card-body">
+        <div class="legend">
+          <div class="legend-item"><div class="legend-swatch" style="background:#CC4125"></div>This week</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#D9D2C8"></div>Last week</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-pair">
+            <div class="bar bar-last" style="height:62%"></div>
+            <div class="bar bar-this" style="height:68%"></div>
+          </div>
+          <div class="bar-pair">
+            <div class="bar bar-last" style="height:55%"></div>
+            <div class="bar bar-this" style="height:72%"></div>
+          </div>
+          <div class="bar-pair">
+            <div class="bar bar-last" style="height:70%"></div>
+            <div class="bar bar-this" style="height:65%"></div>
+          </div>
+          <div class="bar-pair">
+            <div class="bar bar-last" style="height:80%"></div>
+            <div class="bar bar-this" style="height:88%"></div>
+          </div>
+          <div class="bar-pair">
+            <div class="bar bar-last" style="height:75%"></div>
+            <div class="bar bar-this" style="height:80%"></div>
+          </div>
+          <div class="bar-pair">
+            <div class="bar bar-last" style="height:40%"></div>
+            <div class="bar bar-this" style="height:45%"></div>
+          </div>
+          <div class="bar-pair">
+            <div class="bar bar-last" style="height:20%"></div>
+            <div class="bar bar-this" style="height:0%"></div>
+          </div>
+        </div>
+        <div class="bar-labels">
+          <span class="bar-label">Mon</span>
+          <span class="bar-label">Tue</span>
+          <span class="bar-label">Wed</span>
+          <span class="bar-label">Thu</span>
+          <span class="bar-label">Fri</span>
+          <span class="bar-label">Sat</span>
+          <span class="bar-label">Sun</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- POD Aging -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">POD Aging</span>
+        <span class="card-meta">16 pending · days since delivery</span>
+      </div>
+      <div class="card-body">
+        <div style="margin-bottom:10px;font-size:10px;color:#6B6560;">Time elapsed since shipment delivered, POD not yet confirmed:</div>
+        <div class="pod-bucket">
+          <span class="pod-range">1 – 3일</span>
+          <div class="pod-bar-wrap"><div class="pod-bar-fill pod-fill-1" style="width:81%"></div></div>
+          <span class="pod-count">13</span>
+        </div>
+        <div class="pod-bucket">
+          <span class="pod-range">4 – 7일</span>
+          <div class="pod-bar-wrap"><div class="pod-bar-fill pod-fill-2" style="width:19%"></div></div>
+          <span class="pod-count">2</span>
+        </div>
+        <div class="pod-bucket">
+          <span class="pod-range">7일+</span>
+          <div class="pod-bar-wrap"><div class="pod-bar-fill pod-fill-3" style="width:6%"></div></div>
+          <span class="pod-count">1</span>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:6px;">
+          <span style="background:#fde8e4;color:#CC4125;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:600;">⚠ 1 overdue 8일 → 이편한 #TK-20260508-1124</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Page footer note -->
+  <div style="margin-top:16px;font-size:10px;color:#6B6560;text-align:right;">
+    Synced daily @ 00:00 KST · Airtable TMS → Supabase · <span style="color:#2e7d32;">● Live</span>
+  </div>
+</div>
+
+</body>
+</html>

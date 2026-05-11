@@ -1,0 +1,58 @@
+<h2>4-Page Content Map — What goes where?</h2>
+<p class="subtitle">High-level content sketch for each page. Select anything you'd change or add per page.</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;">
+
+  <!-- HOME -->
+  <div style="border:2px solid #cc4125;border-radius:10px;padding:1rem;">
+    <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#cc4125;margin-bottom:0.5rem;font-weight:600;">❈ Home — Command Center</div>
+    <div style="font-size:0.75rem;color:#333;line-height:1.8;">
+      <div style="padding:0.2rem 0.4rem;background:#f5f0e8;border-radius:4px;margin-bottom:0.3rem;">TMS · Active (summary tile — links to TMS page)</div>
+      <div style="padding:0.2rem 0.4rem;background:#f5f0e8;border-radius:4px;margin-bottom:0.3rem;">Tasks · Open (priority bars)</div>
+      <div style="padding:0.2rem 0.4rem;background:#f5f0e8;border-radius:4px;margin-bottom:0.3rem;">Sync Health (5 jobs)</div>
+      <div style="padding:0.2rem 0.4rem;background:#f5f0e8;border-radius:4px;margin-bottom:0.3rem;">AutoResearch KPI Trend (WMS)</div>
+      <div style="padding:0.2rem 0.4rem;background:#f5f0e8;border-radius:4px;margin-bottom:0.3rem;">Ops Activity (live feed)</div>
+      <div style="padding:0.2rem 0.4rem;background:#f5f0e8;border-radius:4px;">AutoResearch Log</div>
+    </div>
+    <div style="margin-top:0.75rem;font-size:0.7rem;color:#6b6560;">Keep mostly as-is — TmsKpi tile becomes a link-through to TMS page</div>
+  </div>
+
+  <!-- TMS -->
+  <div style="border:2px solid #a85928;border-radius:10px;padding:1rem;">
+    <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#a85928;margin-bottom:0.5rem;font-weight:600;">🚚 TMS — Delivery Operations</div>
+    <div style="font-size:0.75rem;color:#333;line-height:1.8;">
+      <div style="padding:0.2rem 0.4rem;background:#fff5f0;border-radius:4px;margin-bottom:0.3rem;border-left:3px solid #cc4125;">⚠ Exception Banner — late + missing PODs (full width)</div>
+      <div style="padding:0.2rem 0.4rem;background:#fff5f0;border-radius:4px;margin-bottom:0.3rem;border-left:3px solid #cc4125;">OTIF Trend — 8-week sparkline</div>
+      <div style="padding:0.2rem 0.4rem;background:#fff5f0;border-radius:4px;margin-bottom:0.3rem;border-left:3px solid #cc4125;">Carrier OTIF Ranking — table w/ per-carrier %</div>
+      <div style="padding:0.2rem 0.4rem;background:#fff5f0;border-radius:4px;margin-bottom:0.3rem;border-left:3px solid #cc4125;">Daily Volume — this week vs last week bars</div>
+      <div style="padding:0.2rem 0.4rem;background:#fff5f0;border-radius:4px;">POD Aging — 1–3일 / 4–7일 / 7일+ buckets</div>
+    </div>
+    <div style="margin-top:0.75rem;font-size:0.7rem;color:#6b6560;">All new — needs 3 new sync jobs + new widgets</div>
+  </div>
+
+  <!-- WMS -->
+  <div style="border:2px solid #5a7a5a;border-radius:10px;padding:1rem;">
+    <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#5a7a5a;margin-bottom:0.5rem;font-weight:600;">📦 WMS — Warehouse Operations</div>
+    <div style="font-size:0.75rem;color:#333;line-height:1.8;">
+      <div style="padding:0.2rem 0.4rem;background:#f0f5f0;border-radius:4px;margin-bottom:0.3rem;border-left:3px solid #5a7a5a;">Completion % + Defect % KPI tiles</div>
+      <div style="padding:0.2rem 0.4rem;background:#f0f5f0;border-radius:4px;margin-bottom:0.3rem;border-left:3px solid #5a7a5a;">WMS KPI Trend chart (move from Home)</div>
+      <div style="padding:0.2rem 0.4rem;background:#f0f5f0;border-radius:4px;margin-bottom:0.3rem;border-left:3px solid #5a7a5a;">Inbound: today's GR count, pending ASNs</div>
+      <div style="padding:0.2rem 0.4rem;background:#f0f5f0;border-radius:4px;margin-bottom:0.3rem;border-left:3px solid #5a7a5a;">Outbound: picks today, wave completions</div>
+      <div style="padding:0.2rem 0.4rem;background:#f0f5f0;border-radius:4px;">Stock alerts: negative inventory, reorder flags</div>
+    </div>
+    <div style="margin-top:0.75rem;font-size:0.7rem;color:#6b6560;">Partial data exists (autoresearch_trend WMS domain). Inbound/outbound/stock need new sync.</div>
+  </div>
+
+  <!-- LOG / VAULT -->
+  <div style="border:2px solid #6b6560;border-radius:10px;padding:1rem;">
+    <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#6b6560;margin-bottom:0.5rem;font-weight:600;">📓 Vault · Log — Research + History</div>
+    <div style="font-size:0.75rem;color:#333;line-height:1.8;">
+      <div style="padding:0.2rem 0.4rem;background:#f5f5f4;border-radius:4px;margin-bottom:0.3rem;border-left:3px solid #6b6560;"><strong>Vault:</strong> AutoResearch entries — all domains (TMS/WMS/INFRA/DEV), links to Obsidian outputs, knowledge timeline</div>
+      <div style="padding:0.2rem 0.4rem;background:#f5f5f4;border-radius:4px;margin-bottom:0.3rem;border-left:3px solid #6b6560;"><strong>Log:</strong> Full audit trail — all sync runs, all agent sessions, error log, GitHub Actions run history</div>
+    </div>
+    <div style="margin-top:0.75rem;font-size:0.7rem;color:#6b6560;">Vault = current AutoResearchLog widget expanded. Log = Ops Activity expanded. Mostly available now.</div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:1.5rem;">Does this content mapping feel right, or are there things in the wrong place? Share your thoughts in the terminal.</p>
