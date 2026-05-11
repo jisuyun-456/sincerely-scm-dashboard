@@ -7,6 +7,7 @@ import { TmsPage } from "@/pages/TmsPage";
 import { WmsPage } from "@/pages/WmsPage";
 import { VaultPage } from "@/pages/VaultPage";
 import { LogPage } from "@/pages/LogPage";
+import { PipelinePage } from "@/pages/PipelinePage";
 
 type LastSync = {
   job_name: string;
@@ -71,6 +72,7 @@ export default function App() {
           <Route path="/wms" element={<WmsPage />} />
           <Route path="/vault" element={<VaultPage />} />
           <Route path="/log" element={<LogPage />} />
+          <Route path="/pipeline" element={<PipelinePage />} />
         </Routes>
         <Footer />
       </main>
@@ -139,6 +141,7 @@ function Header({
             <NavLink to="/wms" label="WMS" />
             <NavLink to="/vault" label="Vault" />
             <NavLink to="/log" label="Log" />
+            <NavLink to="/pipeline" label="Pipeline" />
           </nav>
         </div>
       </div>
