@@ -4,14 +4,19 @@ import { TmsKpi } from "@/widgets/TmsKpi";
 import { AgentFeed } from "@/widgets/AgentFeed";
 import { AutoResearchTrend } from "@/widgets/AutoResearchTrend";
 import { AutoResearchLog } from "@/widgets/AutoResearchLog";
+import { SimpleTodo } from "@/widgets/SimpleTodo";
 
 export function HomePage() {
   return (
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <TmsKpi />
+        <div className="md:col-span-2">
+          <TmsKpi />
+        </div>
         <Tasks />
-        <SyncHealth />
+      </div>
+      <div className="mt-4">
+        <SimpleTodo />
       </div>
       <div className="mt-4">
         <AutoResearchTrend />
@@ -19,6 +24,9 @@ export function HomePage() {
       <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
         <AgentFeed />
         <AutoResearchLog />
+      </div>
+      <div className="mt-4">
+        <SyncHealth />
       </div>
     </>
   );
