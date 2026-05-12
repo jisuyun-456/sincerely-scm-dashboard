@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 
 type DeliveryNote = {
   sc_id: string;
+  to_id: string | null;
   pna_code: string;
   pna_name: string | null;
   shipment_date: string | null;
@@ -37,7 +38,7 @@ function NoteRow({ note, expanded, onToggle }: { note: DeliveryNote; expanded: b
     <li className="border-b border-divider/40 last:border-0 py-3 px-6">
       <div className="flex items-start gap-2 flex-wrap">
         <span className="font-mono text-[11px] text-smoke bg-smoke/10 px-1.5 py-0.5 rounded shrink-0">
-          {note.sc_id}
+          {note.to_id ?? note.sc_id}
         </span>
         <span className="text-xs text-ink font-medium shrink-0">{note.pna_code}</span>
         {clientName && (
@@ -77,7 +78,7 @@ export function TmsDeliveryNotes() {
       until.setDate(until.getDate() + 14);
       const { data, error } = await supabase
         .from("tms_delivery_notes")
-        .select("sc_id, pna_code, pna_name, shipment_date, delivery_notes, status")
+        .select("sc_id, to_id, pna_code, pna_name, shipment_date, delivery_notes, status")
         .gte("shipment_date", today)
         .lte("shipment_date", until.toISOString().slice(0, 10))
         .order("shipment_date", { ascending: true })

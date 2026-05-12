@@ -19,15 +19,18 @@ import requests
 
 TMS_BASE = "app4x70a8mOrIKsMf"
 TBL_SHIPMENT = "tbllg1JoHclGYer7m"
+TBL_DELIVERY_REQUEST = "tblfIEiPJaEF0DVoM"
 AIRTABLE_BASE_URL = "https://api.airtable.com/v0"
 
-FLD_SC_ID = "fldBUwhBlhOMsJZdv"          # SC id (formula)
-FLD_PNA_CODE = "fldTs3FzaSdGYEiKX"       # project code (rollup)
-FLD_PNA_NAME = "fldZel4trYQwP7EV5"       # project (lookup)
-FLD_NOTES = "fldHQdGWe8jNrNYEM"          # 배송 요청사항 (rollup)
-FLD_STATUS = "fldOhibgxg6LIpRTi"         # 발송상태_TMS (singleSelect)
-FLD_SHIPMENT_DATE = "fldQvmEwwzvQW95h9"  # 출하확정일 (date)
-FLD_MOVEMENT_PURPOSE = "fldB4tQYOyiYitu6c"  # 이동목적 rollup (from 배송요청)
+FLD_SC_ID = "fldBUwhBlhOMsJZdv"              # SC id (formula)
+FLD_PNA_CODE = "fldTs3FzaSdGYEiKX"           # project code (rollup)
+FLD_PNA_NAME = "fldZel4trYQwP7EV5"           # project (lookup)
+FLD_NOTES = "fldHQdGWe8jNrNYEM"              # 배송 요청사항 (rollup)
+FLD_STATUS = "fldOhibgxg6LIpRTi"             # 발송상태_TMS (singleSelect)
+FLD_SHIPMENT_DATE = "fldQvmEwwzvQW95h9"      # 출하확정일 (date)
+FLD_MOVEMENT_PURPOSE = "fldB4tQYOyiYitu6c"   # 이동목적 rollup (from 배송요청)
+FLD_DELIVERY_REQ_LINKS = "fldvQQkrDNflD41nv" # 배송요청 links (multipleRecordLinks)
+FLD_LOGISTICS_PK = "fldkA2tfiPumAtaES"       # logistics_PK in 배송요청 (TO number)
 
 FILTER = (
     "AND("
@@ -51,10 +54,34 @@ def _supabase_upsert_headers(key: str) -> dict[str, str]:
     }
 
 
+def _get_to_numbers(pat: str, record_ids: list[str]) -> dict[str, str]:
+    """Fetch TO numbers (logistics_PK) for 배송요청 record IDs via individual GETs."""
+    if not record_ids:
+        return {}
+    session = requests.Session()
+    session.headers.update(_airtable_headers(pat))
+    result: dict[str, str] = {}
+    for rid in record_ids:
+        try:
+            resp = session.get(
+                f"{AIRTABLE_BASE_URL}/{TMS_BASE}/{TBL_DELIVERY_REQUEST}/{rid}",
+                params={"fields[]": [FLD_LOGISTICS_PK], "returnFieldsByFieldId": "true"},
+                timeout=10,
+            )
+            if resp.ok:
+                pk = resp.json().get("fields", {}).get(FLD_LOGISTICS_PK)
+                if pk:
+                    result[rid] = pk
+        except Exception:  # noqa: BLE001
+            pass
+        time.sleep(0.05)
+    return result
+
+
 def _get_records(pat: str) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     offset: str | None = None
-    fields = [FLD_SC_ID, FLD_PNA_CODE, FLD_PNA_NAME, FLD_NOTES, FLD_STATUS, FLD_SHIPMENT_DATE, FLD_MOVEMENT_PURPOSE]
+    fields = [FLD_SC_ID, FLD_PNA_CODE, FLD_PNA_NAME, FLD_NOTES, FLD_STATUS, FLD_SHIPMENT_DATE, FLD_MOVEMENT_PURPOSE, FLD_DELIVERY_REQ_LINKS]
     while True:
         params: dict[str, Any] = {
             "fields[]": fields,
@@ -130,6 +157,13 @@ def run() -> int:
         records = _get_records(airtable_pat)
         print(f"[tms_delivery_notes] fetched {len(records)} records")
 
+        all_dr_ids: set[str] = set()
+        for rec in records:
+            for rid in rec["fields"].get(FLD_DELIVERY_REQ_LINKS) or []:
+                all_dr_ids.add(rid)
+        dr_to_map = _get_to_numbers(airtable_pat, list(all_dr_ids))
+        print(f"[tms_delivery_notes] resolved {len(dr_to_map)} TO numbers")
+
         rows = []
         for rec in records:
             f = rec["fields"]
@@ -170,8 +204,13 @@ def run() -> int:
             status_raw = f.get(FLD_STATUS)
             status = status_raw.get("name") if isinstance(status_raw, dict) else status_raw
 
+            dr_ids = f.get(FLD_DELIVERY_REQ_LINKS) or []
+            to_numbers = [dr_to_map[rid] for rid in dr_ids if rid in dr_to_map]
+            to_id = ", ".join(to_numbers) if to_numbers else None
+
             rows.append({
                 "sc_id": sc_id,
+                "to_id": to_id,
                 "pna_code": pna_code or "",
                 "pna_name": pna_name,
                 "shipment_date": f.get(FLD_SHIPMENT_DATE),
