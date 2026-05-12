@@ -12,6 +12,7 @@ import { TmsKpi } from "@/widgets/TmsKpi";
 import { WeeklyKpiSummary } from "@/widgets/WeeklyKpiSummary";
 import { PipelineTmsKpi } from "@/widgets/PipelineTmsKpi";
 import { TmsTruckLoad } from "@/widgets/TmsTruckLoad";
+import { TmsWarehouseUtilization } from "@/widgets/TmsWarehouseUtilization";
 import { TmsCbmAbc } from "@/widgets/TmsCbmAbc";
 
 const TABS = [
@@ -42,6 +43,9 @@ export function TmsPage() {
       {tab === "ops" && (
         <>
           <TmsKpi />
+          <div className="mt-4">
+            <TmsWarehouseUtilization />
+          </div>
           <div className="mt-4">
             <TmsTruckLoad />
           </div>
