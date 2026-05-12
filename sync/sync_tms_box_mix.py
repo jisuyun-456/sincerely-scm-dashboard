@@ -1,10 +1,13 @@
 """
-sync_wms_box_mix — 내일 필요 박스명칭별 예상 수량 (W3 WMS Box-Mix Forecast)
+sync_tms_box_mix — 내일 필요 박스명칭별 예상 수량 (W3 TMS Box-Mix Forecast)
 
-Looks at the last 14 days of TMS Shipments (출하확정일), parses 최종 외박스 수량 값
-to extract box category counts (특대/중대/대/중/소), computes a weekday-aware
-moving average, and writes tomorrow's predicted quantities to
-wms_box_mix_forecast.
+TMS Shipment(고객납품 PNA 출하건) 기준 박스 수요 예측.
+최근 14일 Shipment의 '최종 외박스 수량 값'을 파싱해 특대/중대/대/중/소
+카테고리별 weekday-aware 이동평균을 계산하고, 내일자 예상 수량을
+tms_box_mix_forecast 테이블에 upsert.
+
+스코프: TMS Shipment 테이블에 기록된 고객납품(PNA) 출하건만 포함.
+        다영기획 임가공 / 박스 텍스트 비표준 포맷 건은 제외됨.
 
 Airtable base : app4x70a8mOrIKsMf (TMS)
 PAT env var   : AIRTABLE_PAT_TMS
@@ -144,15 +147,15 @@ def run() -> int:
     supabase_url = os.environ.get("SUPABASE_URL", "").rstrip("/")
     supabase_key = os.environ.get("SUPABASE_SERVICE_KEY", "")
     if not pat:
-        print("[wms_box_mix] AIRTABLE_PAT_TMS not set — skipping", file=sys.stderr)
+        print("[tms_box_mix] AIRTABLE_PAT_TMS not set — skipping", file=sys.stderr)
         return 0
 
     started_at = datetime.now(timezone.utc)
-    print("[wms_box_mix] start")
+    print("[tms_box_mix] start")
     try:
         cutoff = (date.today() - timedelta(days=LOOKBACK_DAYS)).isoformat()
         shipments = _get_shipments(pat, since=cutoff)
-        print(f"[wms_box_mix] fetched {len(shipments)} shipments since {cutoff}")
+        print(f"[tms_box_mix] fetched {len(shipments)} shipments since {cutoff}")
 
         # Aggregate: (category, weekday) -> total qty, weekday -> distinct dates
         cat_weekday_total: dict[tuple[str, int], int] = defaultdict(int)
@@ -200,33 +203,33 @@ def run() -> int:
             })
 
         if not rows or all(r["predicted_qty"] == 0 for r in rows):
-            print("[wms_box_mix] no box data extracted (predicted_qty all 0)")
+            print("[tms_box_mix] no box data extracted (predicted_qty all 0)")
 
         resp = requests.post(
-            f"{supabase_url}/rest/v1/wms_box_mix_forecast?on_conflict=forecast_date,box_category",
+            f"{supabase_url}/rest/v1/tms_box_mix_forecast?on_conflict=forecast_date,box_category",
             headers=_supabase_headers(supabase_key), json=rows, timeout=30,
         )
         resp.raise_for_status()
 
         finished_at = datetime.now(timezone.utc)
         _insert_sync_run(
-            supabase_url, supabase_key, job_name="wms_box_mix",
+            supabase_url, supabase_key, job_name="tms_box_mix",
             started_at=started_at, finished_at=finished_at,
             status="ok", rows_written=len(rows),
         )
         total_predicted = sum(r["predicted_qty"] for r in rows)
-        print(f"[wms_box_mix] ok — {len(rows)} categories, "
+        print(f"[tms_box_mix] ok — {len(rows)} categories, "
               f"tomorrow {tomorrow} total predicted={total_predicted}")
         return 0
 
     except Exception as e:  # noqa: BLE001
         finished_at = datetime.now(timezone.utc)
         _insert_sync_run(
-            supabase_url, supabase_key, job_name="wms_box_mix",
+            supabase_url, supabase_key, job_name="tms_box_mix",
             started_at=started_at, finished_at=finished_at,
             status="failed", error_message=str(e),
         )
-        print(f"[wms_box_mix] error: {e}", file=sys.stderr)
+        print(f"[tms_box_mix] error: {e}", file=sys.stderr)
         return 1
 
 

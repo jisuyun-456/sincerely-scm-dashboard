@@ -28,7 +28,7 @@ import sync_tms_delivery_notes
 import sync_tms_kpi
 import sync_tms_multi_to
 import sync_tms_pod_aging
-import sync_wms_box_mix
+import sync_tms_box_mix
 import sync_wms_dayoung
 
 load_dotenv()
@@ -84,7 +84,7 @@ def main() -> int:
         ("tms_cbm_abc", sync_tms_cbm_abc.run),
         ("tms_pod_aging", sync_tms_pod_aging.run),
         ("wms_dayoung", sync_wms_dayoung.run),
-        ("wms_box_mix", sync_wms_box_mix.run),
+        ("tms_box_mix", sync_tms_box_mix.run),
         ("project_tasks", sync_project_tasks.run),
         ("autoresearch_trend", sync_autoresearch_trend.run),
         ("autoresearch_log", sync_autoresearch_log.run),

@@ -14,6 +14,7 @@ import { PipelineTmsKpi } from "@/widgets/PipelineTmsKpi";
 import { TmsTruckLoad } from "@/widgets/TmsTruckLoad";
 import { TmsWarehouseUtilization } from "@/widgets/TmsWarehouseUtilization";
 import { TmsCbmAbc } from "@/widgets/TmsCbmAbc";
+import { TmsBoxMixForecast } from "@/widgets/TmsBoxMixForecast";
 
 const TABS = [
   { key: "work", label: "업무처리" },
@@ -48,6 +49,9 @@ export function TmsPage() {
           </div>
           <div className="mt-4">
             <TmsTruckLoad />
+          </div>
+          <div className="mt-4">
+            <TmsBoxMixForecast />
           </div>
           <div className="mt-4">
             <WeeklyKpiSummary domain="TMS" />

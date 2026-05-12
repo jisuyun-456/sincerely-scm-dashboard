@@ -38,14 +38,14 @@ function formatDateLabel(iso: string): string {
   return `${d.getMonth() + 1}/${d.getDate()} (${weekday})`;
 }
 
-export function WmsBoxMixForecast() {
+export function TmsBoxMixForecast() {
   const [rows, setRows] = useState<ForecastRow[] | "loading" | null>("loading");
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       const { data: latest, error: e1 } = await supabase
-        .from("wms_box_mix_forecast")
+        .from("tms_box_mix_forecast")
         .select("forecast_date")
         .order("forecast_date", { ascending: false })
         .limit(1)
@@ -55,7 +55,7 @@ export function WmsBoxMixForecast() {
       const latestRow = latest as { forecast_date: string };
 
       const { data, error } = await supabase
-        .from("wms_box_mix_forecast")
+        .from("tms_box_mix_forecast")
         .select("forecast_date, box_category, predicted_qty, avg_qty_14d, source_days, generated_at")
         .eq("forecast_date", latestRow.forecast_date);
       if (cancelled) return;
@@ -70,7 +70,7 @@ export function WmsBoxMixForecast() {
   if (loading) {
     return (
       <Card>
-        <SectionHeader title="내일 박스 수요 예측" meta="WMS · 14일 기반" />
+        <SectionHeader title="내일 박스 수요 예측" meta="TMS 출하 14일 기반" />
         <div className="px-4 py-4">
           <Skeleton className="h-48 w-full" />
         </div>
@@ -81,7 +81,7 @@ export function WmsBoxMixForecast() {
   if (!Array.isArray(rows) || rows.length === 0) {
     return (
       <Card>
-        <SectionHeader title="내일 박스 수요 예측" meta="WMS · 14일 기반" />
+        <SectionHeader title="내일 박스 수요 예측" meta="TMS 출하 14일 기반" />
         <div className="px-4 py-10 text-center text-sm text-smoke">
           데이터 없음 — sync 후 확인
         </div>

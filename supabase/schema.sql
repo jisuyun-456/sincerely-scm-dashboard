@@ -293,9 +293,10 @@ CREATE POLICY anon_select_tms_cbm_abc_weekly
   ON tms_cbm_abc_weekly FOR SELECT TO anon USING (true);
 
 -- ============================================================
--- 16. wms_box_mix_forecast — 내일 필요 박스명칭별 예상 수량 (W3)
+-- 16. tms_box_mix_forecast — 내일 필요 박스명칭별 예상 수량 (W3)
+--     소스: TMS Shipment 최종 외박스 수량 값 (PNA 고객납품건)
 -- ============================================================
-CREATE TABLE IF NOT EXISTS wms_box_mix_forecast (
+CREATE TABLE IF NOT EXISTS tms_box_mix_forecast (
   forecast_date  DATE         NOT NULL,
   box_category   TEXT         NOT NULL,  -- '특대' | '중대' | '대' | '중' | '소'
   predicted_qty  INT          NOT NULL DEFAULT 0,
@@ -304,12 +305,12 @@ CREATE TABLE IF NOT EXISTS wms_box_mix_forecast (
   generated_at   TIMESTAMPTZ  NOT NULL DEFAULT now(),
   PRIMARY KEY (forecast_date, box_category)
 );
-CREATE INDEX IF NOT EXISTS idx_wms_box_mix_date
-  ON wms_box_mix_forecast (forecast_date DESC);
-ALTER TABLE wms_box_mix_forecast ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS anon_select_wms_box_mix_forecast ON wms_box_mix_forecast;
-CREATE POLICY anon_select_wms_box_mix_forecast
-  ON wms_box_mix_forecast FOR SELECT TO anon USING (true);
+CREATE INDEX IF NOT EXISTS idx_tms_box_mix_date
+  ON tms_box_mix_forecast (forecast_date DESC);
+ALTER TABLE tms_box_mix_forecast ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS anon_select_tms_box_mix_forecast ON tms_box_mix_forecast;
+CREATE POLICY anon_select_tms_box_mix_forecast
+  ON tms_box_mix_forecast FOR SELECT TO anon USING (true);
 
 -- ============================================================
 -- Realtime publication (for widget E live updates)

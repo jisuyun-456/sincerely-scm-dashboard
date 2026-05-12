@@ -4,7 +4,6 @@ import { AutoResearchTrend } from "@/widgets/AutoResearchTrend";
 import { AutoResearchLog } from "@/widgets/AutoResearchLog";
 import { WeeklyKpiSummary } from "@/widgets/WeeklyKpiSummary";
 import { PipelineWmsKpi } from "@/widgets/PipelineWmsKpi";
-import { WmsBoxMixForecast } from "@/widgets/WmsBoxMixForecast";
 
 const TABS = [
   { key: "work", label: "업무처리" },
@@ -20,7 +19,9 @@ export function WmsPage() {
       <PageTabs tabs={TABS} active={tab} onChange={setTab} />
 
       {tab === "work" && (
-        <WmsBoxMixForecast />
+        <div className="flex items-center justify-center py-24 text-smoke text-sm">
+          WMS 업무처리 위젯 준비 중
+        </div>
       )}
 
       {tab === "ops" && (
