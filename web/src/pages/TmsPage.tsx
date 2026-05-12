@@ -7,9 +7,7 @@ import { TmsDayoungSchedule } from "@/widgets/TmsDayoungSchedule";
 import { TmsCarrierRanking } from "@/widgets/TmsCarrierRanking";
 import { TmsOtifTrend } from "@/widgets/TmsOtifTrend";
 import { TmsDailyVolume } from "@/widgets/TmsDailyVolume";
-import { TmsPodAging } from "@/widgets/TmsPodAging";
 import { TmsKpi } from "@/widgets/TmsKpi";
-import { WeeklyKpiSummary } from "@/widgets/WeeklyKpiSummary";
 import { PipelineTmsKpi } from "@/widgets/PipelineTmsKpi";
 import { TmsTruckLoad } from "@/widgets/TmsTruckLoad";
 import { TmsWarehouseUtilization } from "@/widgets/TmsWarehouseUtilization";
@@ -54,13 +52,7 @@ export function TmsPage() {
             <TmsBoxMixForecast />
           </div>
           <div className="mt-4">
-            <WeeklyKpiSummary domain="TMS" />
-          </div>
-          <div className="mt-4">
             <TmsExceptionBanner />
-          </div>
-          <div className="mt-4">
-            <TmsPodAging />
           </div>
         </>
       )}
