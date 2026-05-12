@@ -23,6 +23,7 @@ AIRTABLE_BASE_URL = "https://api.airtable.com/v0"
 
 FLD_STATUS = "fldOhibgxg6LIpRTi"
 FLD_SHIPMENT_DATE = "fldQvmEwwzvQW95h9"
+FLD_TOTAL_CBM = "fldJ9DHjwoRyeUEqE"
 
 FILTER_30D = "IS_AFTER({출하확정일},DATEADD(TODAY(),-30,'days'))"
 
@@ -42,7 +43,7 @@ def _get_records(pat: str) -> list[dict[str, Any]]:
     offset: str | None = None
     while True:
         params: dict[str, Any] = {
-            "fields[]": [FLD_STATUS, FLD_SHIPMENT_DATE],
+            "fields[]": [FLD_STATUS, FLD_SHIPMENT_DATE, FLD_TOTAL_CBM],
             "pageSize": 100, "returnFieldsByFieldId": "true",
             "filterByFormula": FILTER_30D,
         }
@@ -91,6 +92,7 @@ def run() -> int:
 
         sent: dict[str, int] = defaultdict(int)
         dlv: dict[str, int] = defaultdict(int)
+        cbm: dict[str, float] = defaultdict(float)
         for rec in records:
             f = rec["fields"]
             d = f.get(FLD_SHIPMENT_DATE)
@@ -101,9 +103,14 @@ def run() -> int:
             sent[d] += 1
             if status in ("배송완료", "출하 완료", "출하완료"):
                 dlv[d] += 1
+            try:
+                cbm[d] += float(f.get(FLD_TOTAL_CBM) or 0)
+            except (ValueError, TypeError):
+                pass
 
         rows = [{"date": d, "sent_count": total,
-                 "delivered_count": dlv.get(d, 0), "pending_count": total - dlv.get(d, 0)}
+                 "delivered_count": dlv.get(d, 0), "pending_count": total - dlv.get(d, 0),
+                 "total_cbm": round(cbm.get(d, 0.0), 3)}
                 for d, total in sent.items()]
 
         if not rows:
