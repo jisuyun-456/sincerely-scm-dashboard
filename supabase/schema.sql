@@ -293,6 +293,25 @@ CREATE POLICY anon_select_tms_cbm_abc_weekly
   ON tms_cbm_abc_weekly FOR SELECT TO anon USING (true);
 
 -- ============================================================
+-- 16. wms_box_mix_forecast — 내일 필요 박스명칭별 예상 수량 (W3)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS wms_box_mix_forecast (
+  forecast_date  DATE         NOT NULL,
+  box_category   TEXT         NOT NULL,  -- '특대' | '중대' | '대' | '중' | '소'
+  predicted_qty  INT          NOT NULL DEFAULT 0,
+  avg_qty_14d    NUMERIC(6,2) NOT NULL DEFAULT 0,
+  source_days    INT          NOT NULL DEFAULT 14,
+  generated_at   TIMESTAMPTZ  NOT NULL DEFAULT now(),
+  PRIMARY KEY (forecast_date, box_category)
+);
+CREATE INDEX IF NOT EXISTS idx_wms_box_mix_date
+  ON wms_box_mix_forecast (forecast_date DESC);
+ALTER TABLE wms_box_mix_forecast ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS anon_select_wms_box_mix_forecast ON wms_box_mix_forecast;
+CREATE POLICY anon_select_wms_box_mix_forecast
+  ON wms_box_mix_forecast FOR SELECT TO anon USING (true);
+
+-- ============================================================
 -- Realtime publication (for widget E live updates)
 -- ============================================================
 -- Supabase Realtime publishes changes to the `supabase_realtime` publication.
