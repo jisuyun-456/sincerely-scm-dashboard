@@ -63,3 +63,37 @@ export async function fetchAgentStats(): Promise<AgentStat[]> {
   }
   return Array.from(map.values()).sort((a, b) => b.count - a.count);
 }
+
+export type SessionGroup = {
+  session_id: string;
+  started_at: string;
+  agents: OpsEvent[];
+};
+
+export async function fetchSessionGroups(limit = 20): Promise<SessionGroup[]> {
+  const { data, error } = await supabase
+    .from("ops_event")
+    .select("*")
+    .eq("source", "hook")
+    .not("session_id", "is", null)
+    .order("created_at", { ascending: false })
+    .limit(200);
+
+  if (error) throw error;
+  if (!data) return [];
+
+  const map = new Map<string, OpsEvent[]>();
+  for (const evt of data as OpsEvent[]) {
+    const sid = evt.session_id!;
+    if (!map.has(sid)) map.set(sid, []);
+    map.get(sid)!.push(evt);
+  }
+
+  return Array.from(map.entries())
+    .map(([session_id, agents]) => ({
+      session_id,
+      started_at: agents[agents.length - 1].created_at,
+      agents: [...agents].reverse(),
+    }))
+    .slice(0, limit);
+}
