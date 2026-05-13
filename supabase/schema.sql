@@ -313,6 +313,28 @@ CREATE POLICY anon_select_tms_box_mix_forecast
   ON tms_box_mix_forecast FOR SELECT TO anon USING (true);
 
 -- ============================================================
+-- 17. ops_event — harness telemetry / /ops Agent Activity Console
+-- ============================================================
+CREATE TABLE IF NOT EXISTS ops_event (
+  id           BIGSERIAL     PRIMARY KEY,
+  created_at   TIMESTAMPTZ   NOT NULL DEFAULT now(),
+  source       TEXT          NOT NULL,   -- "harness" | "hook"
+  agent_id     TEXT          NOT NULL,
+  domain       TEXT,
+  session_id   TEXT,
+  week         TEXT,
+  status       TEXT          NOT NULL,   -- "started" | "completed" | "failed"
+  duration_ms  INT,
+  summary      TEXT,
+  meta         JSONB
+);
+CREATE INDEX IF NOT EXISTS idx_ops_event_created_at ON ops_event (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_ops_event_agent_id ON ops_event (agent_id);
+ALTER TABLE ops_event ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS anon_select_ops_event ON ops_event;
+CREATE POLICY anon_select_ops_event ON ops_event FOR SELECT TO anon USING (true);
+
+-- ============================================================
 -- Realtime publication (for widget E live updates)
 -- ============================================================
 -- Supabase Realtime publishes changes to the `supabase_realtime` publication.
