@@ -136,6 +136,7 @@ CREATE POLICY anon_insert_agent_events ON agent_events FOR INSERT TO anon WITH C
 -- ============================================================
 CREATE TABLE IF NOT EXISTS tms_delivery_notes (
   sc_id          TEXT PRIMARY KEY,
+  to_id          TEXT,
   pna_code       TEXT NOT NULL DEFAULT '',
   pna_name       TEXT,
   shipment_date  DATE,
