@@ -123,7 +123,7 @@ def _extract_pt_code(raw: str | None) -> str:
 
 # ── Data helpers ──────────────────────────────────────────────────────────────
 def _load_sp_lookup(wms_pat: str) -> dict[str, str]:
-    records = _get_all(WMS_BASE, TBL_SP, [FLD_SP_CODE, FLD_SP_SPEC], "TRUE", wms_pat)
+    records = _get_all(WMS_BASE, TBL_SP, [FLD_SP_CODE, FLD_SP_SPEC], "1=1", wms_pat)
     lookup: dict[str, str] = {}
     for rec in records:
         f = rec.get("fields", {})
