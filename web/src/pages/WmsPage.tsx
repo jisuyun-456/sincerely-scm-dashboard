@@ -4,6 +4,8 @@ import { AutoResearchTrend } from "@/widgets/AutoResearchTrend";
 import { AutoResearchLog } from "@/widgets/AutoResearchLog";
 import { WeeklyKpiSummary } from "@/widgets/WeeklyKpiSummary";
 import { PipelineWmsKpi } from "@/widgets/PipelineWmsKpi";
+import { WmsCbmBalance } from "@/widgets/WmsCbmBalance";
+import { WmsCbmDailyTrend } from "@/widgets/WmsCbmDailyTrend";
 
 const TABS = [
   { key: "work", label: "업무처리" },
@@ -30,7 +32,13 @@ export function WmsPage() {
 
       {tab === "analytics" && (
         <>
-          <PipelineWmsKpi />
+          <WmsCbmBalance />
+          <div className="mt-6">
+            <WmsCbmDailyTrend />
+          </div>
+          <div className="mt-6">
+            <PipelineWmsKpi />
+          </div>
           <div className="mt-6">
             <AutoResearchTrend />
           </div>

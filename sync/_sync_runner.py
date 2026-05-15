@@ -29,6 +29,7 @@ import sync_tms_kpi
 import sync_tms_multi_to
 import sync_tms_pod_aging
 import sync_tms_box_mix
+import sync_wms_cbm
 import sync_wms_dayoung
 import sync_kpi3_productivity
 
@@ -84,6 +85,7 @@ def main() -> int:
         ("tms_daily_volume", sync_tms_daily_volume.run),
         ("tms_cbm_abc", sync_tms_cbm_abc.run),
         ("tms_pod_aging", sync_tms_pod_aging.run),
+        ("wms_cbm", sync_wms_cbm.run),
         ("wms_dayoung", sync_wms_dayoung.run),
         ("tms_box_mix", sync_tms_box_mix.run),
         ("project_tasks", sync_project_tasks.run),

@@ -172,6 +172,48 @@ export type Database = {
           created_at?: string;
         };
       };
+      wms_cbm_daily: {
+        Row: {
+          date: string;
+          inbound_cbm: number;
+          inbound_count: number;
+          created_at: string;
+        };
+        Insert: {
+          date: string;
+          inbound_cbm?: number;
+          inbound_count?: number;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["wms_cbm_daily"]["Insert"]>;
+      };
+      wms_cbm_balance: {
+        Row: {
+          snapshot_date: string;
+          ytd_inbound_cbm: number;
+          ytd_outbound_cbm: number;
+          net_stock_cbm: number;
+          utilization_pct: number;
+          available_cbm: number;
+          inbound_headroom: number;
+          capacity_inbound: number;
+          capacity_outbound: number;
+          created_at: string;
+        };
+        Insert: {
+          snapshot_date: string;
+          ytd_inbound_cbm?: number;
+          ytd_outbound_cbm?: number;
+          net_stock_cbm?: number;
+          utilization_pct?: number;
+          available_cbm?: number;
+          inbound_headroom?: number;
+          capacity_inbound?: number;
+          capacity_outbound?: number;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["wms_cbm_balance"]["Insert"]>;
+      };
     };
   };
 };
