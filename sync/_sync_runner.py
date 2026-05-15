@@ -30,6 +30,7 @@ import sync_tms_multi_to
 import sync_tms_pod_aging
 import sync_tms_box_mix
 import sync_wms_dayoung
+import sync_kpi3_productivity
 
 load_dotenv()
 
@@ -88,6 +89,7 @@ def main() -> int:
         ("project_tasks", sync_project_tasks.run),
         ("autoresearch_trend", sync_autoresearch_trend.run),
         ("autoresearch_log", sync_autoresearch_log.run),
+        ("kpi3_productivity", sync_kpi3_productivity.run),
     ]
     for name, fn in jobs:
         try:

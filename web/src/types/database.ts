@@ -135,6 +135,22 @@ export type Database = {
         };
         Update: Partial<Database["public"]["Tables"]["sync_runs"]["Insert"]>;
       };
+      kpi3_productivity: {
+        Row: {
+          week_id: string;
+          shipment_count: number;
+          fte: number;
+          count_per_fte: number | null;
+          updated_at: string;
+        };
+        Insert: {
+          week_id: string;
+          shipment_count?: number;
+          fte?: number;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["kpi3_productivity"]["Insert"]>;
+      };
       calendar_events: {
         Row: {
           id: number;
