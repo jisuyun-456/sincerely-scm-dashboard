@@ -28,6 +28,7 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          AIRTABLE_WMS_PAT: ${{ secrets.AIRTABLE_WMS_PAT }}
           AIRTABLE_PAT_TMS: ${{ secrets.AIRTABLE_PAT_TMS }}
           AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_PAT_BARCODE }}
           AIRTABLE_BASE_TMS: ${{ secrets.AIRTABLE_BASE_TMS }}
