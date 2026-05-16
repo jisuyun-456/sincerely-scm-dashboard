@@ -80,7 +80,7 @@ def _get_all(base: str, table: str, fields: list[str], formula: str, pat: str) -
             f"{AIRTABLE_BASE_URL}/{base}/{table}",
             headers=_headers(pat),
             params=params,
-            timeout=30,
+            timeout=60,
         )
         resp.raise_for_status()
         data = resp.json()
@@ -147,7 +147,7 @@ def _get_movements(wms_pat: str, since: date) -> list[dict[str, Any]]:
 
 
 def _get_tms_outbound_ytd(tms_pat: str, since: date) -> float:
-    formula = f"IS_AFTER({{출하일}}, DATEADD('{since.isoformat()}', -1, 'days'))"
+    formula = f"IS_AFTER({{{TF_DATE}}}, DATEADD('{since.isoformat()}', -1, 'days'))"
     records = _get_all(TMS_BASE, TBL_SHIPMENT, [TF_DATE, TF_TOTAL_CBM], formula, tms_pat)
     total = 0.0
     for rec in records:
