@@ -10,6 +10,7 @@ import { LogPage } from "@/pages/LogPage";
 import { PipelinePage } from "@/pages/PipelinePage";
 import { OpsPage } from "@/pages/OpsPage";
 import { KPI3Dashboard } from "@/pages/KPI3Dashboard";
+import { LivingMapPage } from "@/pages/LivingMapPage";
 
 type LastSync = {
   job_name: string;
@@ -77,6 +78,7 @@ export default function App() {
           <Route path="/pipeline" element={<PipelinePage />} />
           <Route path="/ops" element={<OpsPage />} />
           <Route path="/kpi3" element={<KPI3Dashboard />} />
+          <Route path="/map" element={<LivingMapPage />} />
         </Routes>
         <Footer />
       </main>
@@ -147,6 +149,7 @@ function Header({
             <NavLink to="/log" label="Log" />
             <NavLink to="/ops" label="Ops" />
             <NavLink to="/kpi3" label="KPI-3" />
+            <NavLink to="/map" label="Map" />
           </nav>
         </div>
       </div>
