@@ -67,6 +67,12 @@ export default {
           "Arial",
           "sans-serif",
         ],
+        jakarta: [
+          '"Plus Jakarta Sans"',
+          "Inter",
+          '"Helvetica Neue"',
+          "sans-serif",
+        ],
         display: [
           '"Playfair Display"',
           '"Tiempos Headline"',
